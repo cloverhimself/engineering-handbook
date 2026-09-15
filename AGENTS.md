@@ -11,10 +11,12 @@ Do not equate more technology with better engineering. Do not add infrastructure
 Before substantial implementation:
 1. Read the project requirements and existing codebase.
 2. Read `templates/project-design.md` and complete the relevant sections in the project documentation.
-3. Identify functional requirements, non-functional requirements, expected scale, trust boundaries, persistence needs, external dependencies, deployment constraints, and budget constraints.
-4. Inspect existing project conventions and follow them unless there is a strong reason not to.
-5. State important assumptions. Do not silently invent business rules.
-6. For major choices, compare at least one simpler alternative and document why the chosen option is appropriate.
+3. Select the relevant profile(s) from `profiles/` and record why they apply.
+4. Read `code-quality/clean-code.md` and `code-quality/project-structure.md`.
+5. Identify functional requirements, non-functional requirements, expected scale, trust boundaries, persistence needs, external dependencies, deployment constraints, and budget constraints.
+6. Inspect existing project conventions and follow them unless there is a strong reason not to.
+7. State important assumptions. Do not silently invent business rules.
+8. For major choices, compare at least one simpler alternative and document why the chosen option is appropriate.
 
 Do not begin by generating large amounts of code.
 
@@ -48,8 +50,23 @@ Add components only when justified:
 
 Record major architecture decisions with an ADR.
 
-## 5. Project and file structure
-Use the conventional structure of the selected framework first.
+## 5. Code quality and semantics
+Implementation must optimize for clarity, correctness, maintainability, and unsurprising behavior.
+
+Follow `code-quality/clean-code.md`.
+
+Use meaningful names, cohesive functions, low nesting, explicit side effects, framework-standard syntax, consistent formatting, and clear error handling.
+
+Do not optimize for fewer lines. Do not compress logic into clever one-liners when readability suffers.
+
+Long functions and files are review signals, not automatic failures. Split code when responsibilities or reasons to change diverge.
+
+Avoid god objects/files, magic business values, stale comments, hidden mutation, silent error swallowing, deep inheritance, and abstractions that exist only to appear sophisticated.
+
+Prefer small focused changes. Separate structural refactors from behavior changes when practical.
+
+## 6. Project and file structure
+Use the conventional structure of the selected framework first and follow `code-quality/project-structure.md`.
 
 A file/module should have one coherent responsibility. Split by responsibility and domain, not arbitrary line counts.
 
@@ -59,7 +76,7 @@ Prefer feature/domain grouping once a codebase becomes non-trivial. Keep cross-d
 
 Do not create interfaces, factories, repositories, adapters, base classes, or dependency injection layers merely because they sound architectural. Introduce them when they isolate a real boundary or improve testability/changeability.
 
-## 6. Database and persistence
+## 7. Database and persistence
 Treat the database as part of the integrity model, not just storage.
 
 Use:
@@ -76,7 +93,7 @@ Do not use application code as the only enforcement mechanism for invariants tha
 
 Avoid N+1 queries, unbounded reads, accidental full-table scans, and pagination without deterministic ordering.
 
-## 7. Scale and capacity
+## 8. Scale and capacity
 Never design from total registered users alone.
 
 Consider:
@@ -95,7 +112,7 @@ Consider:
 
 Use rough capacity estimates before adding scaling infrastructure. Prefer horizontal stateless application scaling where appropriate. Define specific triggers for introducing new infrastructure.
 
-## 8. Security
+## 9. Security
 Security is a design requirement.
 
 At minimum:
@@ -116,7 +133,7 @@ At minimum:
 
 Threat-model authentication, payments, admin functions, uploads, webhooks, password reset, invitations, and destructive actions.
 
-## 9. Reliability
+## 10. Reliability
 Assume every network call and external dependency can fail.
 
 Use explicit timeouts. Retry only transient failures. Bound retries and use backoff where appropriate. Prefer idempotent operations when retries are possible.
@@ -125,7 +142,7 @@ Persist critical state before acknowledging success. Do not rely on in-memory st
 
 Design webhooks and jobs for duplicate delivery. Use unique constraints/idempotency keys where appropriate.
 
-## 10. Money and commerce
+## 11. Money, payments, and commerce
 Never use binary floating-point for authoritative monetary calculations.
 
 Store money using integer minor units when suitable or an exact fixed-precision decimal type. Store currency explicitly.
@@ -145,18 +162,20 @@ Do not recompute historical orders from mutable current product prices or tax co
 
 Payments must support provider-reference uniqueness, idempotent verification/webhooks, reconciliation, failure states, and audit trails.
 
-Tax is jurisdiction- and transaction-dependent. Never invent tax rates, thresholds, invoice requirements, withholding rules, VAT/GST treatment, or filing obligations. Tax logic must be configured from verified requirements and should preserve the tax basis, rate, jurisdiction, and calculation inputs needed to explain an amount later.
+For wallets, fintech, marketplaces, or systems that move value, follow the relevant project profile and treat the ledger/transaction record as authoritative. Model authorization, capture, settlement, reversal, refund, payout, chargeback, and reconciliation as distinct states where the domain requires them.
 
-Financial rules require explicit stakeholder/accounting confirmation before production when legal or accounting obligations are involved.
+Tax is jurisdiction- and transaction-dependent. Never invent tax rates, thresholds, invoice requirements, withholding rules, VAT/GST treatment, KYC/AML obligations, licensing rules, or filing obligations. Such rules must come from verified requirements and should preserve the basis needed to explain historical calculations later.
 
-## 11. API design
+Financial rules require explicit stakeholder/accounting/compliance confirmation before production when legal or accounting obligations are involved.
+
+## 12. API design
 Use consistent resource naming, HTTP methods, status codes, validation errors, pagination, filtering, and versioning policy.
 
 Never expose internal stack traces or sensitive implementation details to clients.
 
 Design mutation endpoints with concurrency and duplicate requests in mind.
 
-## 12. Testing
+## 13. Testing
 Tests should protect behavior and important invariants, not implementation trivia.
 
 Use an appropriate mix of:
@@ -166,11 +185,11 @@ Use an appropriate mix of:
 - end-to-end tests for critical flows;
 - load tests for capacity-sensitive systems.
 
-Critical flows such as authentication, authorization, payments, order state transitions, and destructive operations require happy-path and failure-path tests.
+Critical flows such as authentication, authorization, payments, order state transitions, ledger operations, and destructive operations require happy-path and failure-path tests.
 
 A feature is not complete merely because it compiles.
 
-## 13. Observability
+## 14. Observability
 Production systems must make failures diagnosable.
 
 Provide structured logs, meaningful error reporting, health/readiness checks as appropriate, and metrics for important service behavior.
@@ -179,7 +198,7 @@ Never log passwords, full tokens, secrets, sensitive payment data, or unnecessar
 
 For important business actions, prefer audit logs that identify actor, action, target, timestamp, and relevant non-sensitive context.
 
-## 14. Dependencies
+## 15. Dependencies and runtime discipline
 Before adding a dependency ask:
 - Can the platform/framework already do this well?
 - Is the package maintained and widely used?
@@ -188,7 +207,9 @@ Before adding a dependency ask:
 
 Do not add overlapping packages for the same job without justification.
 
-## 15. Cost and financial constraints
+Keep deploy-specific configuration outside code. Declare dependencies explicitly. Prefer stateless application processes for horizontally scalable services, with durable state in backing services.
+
+## 16. Cost and financial constraints
 Architecture has a financial cost.
 
 For meaningful infrastructure choices estimate the major cost drivers: compute, database, storage, bandwidth/egress, email/SMS, third-party API calls, logging/observability, backups, payment fees, and operational overhead.
@@ -197,14 +218,14 @@ Prefer designs whose cost scales predictably with usage. Do not save tiny infras
 
 Record cost assumptions and the usage level at which an alternative becomes more economical.
 
-## 16. Changes and refactoring
+## 17. Changes and refactoring
 Do not rewrite working systems without a concrete benefit.
 
 Make the smallest coherent change that solves the problem. Preserve backwards compatibility where required. Use migrations and staged rollouts for risky state changes.
 
 Refactor when complexity obstructs correctness or changeability, not merely to make code look different.
 
-## 17. Completion standard
+## 18. Completion standard
 Before declaring work complete:
 - run formatting/linting/type checks as applicable;
 - run relevant tests;
