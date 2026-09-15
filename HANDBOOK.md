@@ -36,6 +36,7 @@ Load only when relevant:
 - [`specialists/file-uploads.md`](./specialists/file-uploads.md)
 - [`specialists/ledger-reconciliation.md`](./specialists/ledger-reconciliation.md)
 - [`specialists/observability-slos.md`](./specialists/observability-slos.md)
+- [`specialists/production-basics.md`](./specialists/production-basics.md)
 - [`specialists/queues-background-jobs.md`](./specialists/queues-background-jobs.md)
 - [`specialists/rate-limiting.md`](./specialists/rate-limiting.md)
 
