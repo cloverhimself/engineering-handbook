@@ -9,6 +9,8 @@ Purpose:
 Primary users:
 Current stack:
 Repository/branch:
+Current lifecycle stage: `experiment | prototype | MVP | production/growth | high-scale/high-criticality`
+Why this stage applies:
 
 ## Current state
 
@@ -63,6 +65,15 @@ Definition of done:
 
 - 
 
+## Lifecycle review
+
+Has the project outgrown its current lifecycle stage? `yes/no`
+Evidence:
+Next-stage gaps, if any:
+- 
+
+Do not advance the lifecycle stage because of ambition alone. Use real product risk, traffic, operational commitments, financial exposure, or organizational requirements.
+
 ## Handoff protocol
 
 Before ending a meaningful work session, update this file with the new state and verification results.
@@ -71,8 +82,9 @@ When starting a new session or switching agents:
 1. read root `AGENTS.md`;
 2. read `docs/CONTEXT.md`;
 3. read `docs/PHASES.md`;
-4. inspect referenced ADRs/design docs;
-5. verify Git branch/status before changing code;
-6. never assume a previous agent's stated test result is current if the code has changed since.
+4. read lifecycle/profile guidance relevant to the project;
+5. inspect referenced ADRs/design docs;
+6. verify Git branch/status before changing code;
+7. never assume a previous agent's stated test result is current if the code has changed since.
 
-Do not turn this into a chat transcript. Store only durable facts, decisions, verified state, assumptions, and the immediate handoff.
+Do not turn this into a chat transcript. Store only durable facts, decisions, verified state, assumptions, lifecycle status, and the immediate handoff.
