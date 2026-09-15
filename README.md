@@ -21,6 +21,7 @@ The agent will:
 - inspect an existing project without gratuitously rewriting it;
 - add this handbook under `.engineering/`;
 - choose relevant project profiles;
+- choose the current lifecycle stage;
 - choose only relevant specialist modules;
 - generate a small project-specific `AGENTS.md`;
 - create `docs/project-design.md`;
@@ -33,6 +34,24 @@ The agent will:
 - use supervisor/self-review mode for substantial changes;
 - plan clean commit and PR boundaries;
 - stop before substantial implementation so you can review the plan.
+
+## Lifecycle stages
+
+The handbook now distinguishes between:
+
+- **experiment / spike** — answer a question quickly;
+- **prototype** — prove UX or feasibility;
+- **MVP** — serve real early users with real correctness on core flows;
+- **production / growth** — operate reliably for a meaningful user base and business process;
+- **high-scale / high-criticality** — handle substantial traffic, strict reliability commitments, large financial exposure, or complex operational requirements.
+
+See [`lifecycle/stages.md`](./lifecycle/stages.md).
+
+The lifecycle stage changes how much rigor is expected around testing, observability, CI, backups, scaling infrastructure, runbooks, capacity modeling, and failure testing.
+
+It does **not** weaken domain-critical correctness. An MVP wallet still needs correct money movement. A prototype that handles real credentials still needs secure auth boundaries.
+
+A production product also does not automatically need microservices, Kubernetes, Redis, Kafka, or multiple databases. Production readiness and high-scale architecture are different things.
 
 ## Project profiles
 
@@ -94,9 +113,11 @@ Every serious project created with the bootstrap flow gets:
 
 A living roadmap from initial discovery through production readiness. Each phase has scope, deliverables, verification gates, status, decisions and deferred work. Agents update it as the product is built.
 
+It also records the current lifecycle stage so phase expectations are calibrated appropriately.
+
 ### `docs/CONTEXT.md`
 
-A compact durable handoff containing current state, architecture, active assumptions, verified checks, current task, risks and next actions.
+A compact durable handoff containing current state, architecture, lifecycle stage, active assumptions, verified checks, current task, risks and next actions.
 
 When switching from Claude Code to Codex, starting a fresh chat, or handing work to another developer, the receiving agent reads `AGENTS.md`, `docs/CONTEXT.md`, `docs/PHASES.md` and relevant ADRs instead of relying on a manually written chat summary.
 
@@ -145,13 +166,13 @@ Financial systems receive stricter rules for:
 - processor/infrastructure cost;
 - tax/accounting/compliance requirements as verified external inputs rather than invented code.
 
-For wallets and fintech systems, financial correctness takes priority over convenience.
+For wallets and fintech systems, financial correctness takes priority over convenience regardless of lifecycle stage.
 
 ## Core philosophy
 
 The handbook repeatedly asks:
 
-> What is the simplest conventional design that satisfies today's requirements, protects important invariants, remains understandable to ordinary developers, and leaves a reasonable path for tomorrow?
+> What is the simplest conventional design that satisfies today's requirements, current lifecycle stage, and real risk level, protects important invariants, remains understandable to ordinary developers, and leaves a reasonable path for tomorrow?
 
 That means it will not recommend Kafka, Redis, Kubernetes, Elasticsearch, microservices, queues, custom abstraction layers, or extra packages merely because they sound scalable.
 
@@ -163,6 +184,7 @@ Each additional component should have a concrete problem it solves, a tradeoff, 
 engineering-handbook/
 ├── AGENTS.md
 ├── BOOTSTRAP_PROMPT.md
+├── lifecycle/
 ├── profiles/
 ├── specialists/
 ├── code-quality/
@@ -182,7 +204,7 @@ engineering-handbook/
 
 ## Existing projects
 
-The bootstrap flow works for existing projects too. Agents are instructed to inspect the codebase first, preserve working conventions, and improve incrementally instead of forcing every application into the same architecture.
+The bootstrap flow works for existing projects too. Agents are instructed to inspect the codebase first, preserve working conventions, choose the lifecycle stage from the actual state of the product, and improve incrementally instead of forcing every application into the same architecture.
 
 ## After setup
 
@@ -193,8 +215,9 @@ Then tell the agent:
 ```text
 The project design and phases look good. Begin the current phase.
 Follow AGENTS.md and the engineering handbook throughout the project.
-Keep docs/project-design.md, docs/PHASES.md, docs/CONTEXT.md, and ADRs updated when meaningful decisions or project state change.
+Keep docs/project-design.md, docs/PHASES.md, docs/CONTEXT.md, and ADRs updated when meaningful decisions, lifecycle stage, or project state change.
 Use supervisor mode for substantial changes.
+Do not introduce next-stage infrastructure early unless current risk or measured requirements justify it.
 Run the relevant checks after each phase and do not claim completion for checks you did not actually run.
 ```
 
