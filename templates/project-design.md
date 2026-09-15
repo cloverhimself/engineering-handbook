@@ -6,18 +6,32 @@ What real problem is being solved?
 ## 2. Users
 Who are the users and roles?
 
-## 3. Scope
+## 3. Product profiles
+Which profiles from `.engineering/profiles/` apply, and why?
+
+## 4. Lifecycle stage
+Current stage: `experiment | prototype | MVP | production/growth | high-scale/high-criticality`
+
+Why this stage applies:
+
+What this stage requires now:
+
+What is intentionally deferred until a later stage:
+
+Risk overrides: note any area that needs stricter controls than the general lifecycle stage because of money movement, sensitive data, auth, destructive operations, irreversible state changes, or compliance obligations.
+
+## 5. Scope
 ### V1
 ### Explicitly out of scope
 
-## 4. Core user journeys
+## 6. Core user journeys
 
-## 5. Functional requirements
+## 7. Functional requirements
 
-## 6. Non-functional requirements
+## 8. Non-functional requirements
 Latency, availability, privacy, compliance, accessibility, portability, etc.
 
-## 7. Capacity assumptions
+## 9. Capacity assumptions
 - registered users:
 - DAU/MAU:
 - peak concurrent users:
@@ -27,33 +41,38 @@ Latency, availability, privacy, compliance, accessibility, portability, etc.
 - media/bandwidth:
 - geographic distribution:
 
-## 8. Architecture
-Describe the simplest architecture that satisfies the requirements.
+## 10. Architecture
+Describe the simplest architecture that satisfies the requirements and current lifecycle stage.
 
-## 9. Data model and invariants
+## 11. Data model and invariants
 
-## 10. Authentication and authorization
+## 12. Authentication and authorization
 
-## 11. External dependencies
+## 13. External dependencies
 Include failure behavior and cost model.
 
-## 12. Security/threat model
+## 14. Security/threat model
 
-## 13. Money/tax/payment model
+## 15. Money/tax/payment model
 If applicable. Include currency, exactness, tax source/configuration, payment lifecycle, refunds, reconciliation.
 
-## 14. Reliability
+## 16. Reliability
 Timeouts, retries, idempotency, jobs, backups.
 
-## 15. Observability and audit
+## 17. Observability and audit
+State what is appropriate for the current lifecycle stage and what is deferred.
 
-## 16. Testing strategy
+## 18. Testing strategy
+State the current lifecycle-stage baseline and any stricter domain-specific tests.
 
-## 17. Deployment and environments
+## 19. Deployment and environments
 
-## 18. Estimated cost drivers
+## 20. Estimated cost drivers
 
-## 19. Tradeoffs and rejected alternatives
+## 21. Tradeoffs and rejected alternatives
 
-## 20. Scaling triggers
+## 22. Scaling triggers
 Specify measurable triggers, not vague future concerns.
+
+## 23. Lifecycle transition triggers
+What evidence would justify moving this product to the next lifecycle stage?
