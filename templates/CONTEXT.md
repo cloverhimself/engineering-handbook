@@ -1,6 +1,8 @@
-# Project Context Handoff
+# Project Context
 
-This file is the durable handoff between AI agents, developers, and new chat sessions. Keep it concise, factual, and current.
+This file stores **durable project facts** for AI agents and developers. Keep it concise, factual, and current.
+
+Do not use it as a chat transcript or active-task diary. Active work belongs in `docs/NOW.md`.
 
 ## Project
 
@@ -8,25 +10,25 @@ Name:
 Purpose:
 Primary users:
 Current stack:
-Repository/branch:
+Repository:
 Current lifecycle stage: `experiment | prototype | MVP | production/growth | high-scale/high-criticality`
 Why this stage applies:
+Selected profiles:
 
-## Current state
+## Architecture summary
 
-Current phase:
-Last completed milestone:
-What is working now:
-What is partially implemented:
-Known broken/incomplete areas:
-
-## Important architecture
-
-Key modules/services:
+Applications/services:
 Database/storage:
 Authentication/authorization:
+Important domain boundaries:
 External integrations:
 Deployment/runtime:
+
+## Critical invariants
+
+- 
+
+Examples: tenant isolation, unique payment references, inventory cannot fall below allowed rules, balances derive from ledger entries.
 
 ## Decisions that must not be rediscovered
 
@@ -34,36 +36,29 @@ Deployment/runtime:
   Reason:
   Reference/ADR:
 
+## Long-lived constraints
+
+- 
+
+Examples: required provider, deployment restriction, compatibility contract, regulatory input that was explicitly supplied.
+
 ## Active assumptions
 
 - Assumption:
   Confidence:
   Needs confirmation from:
 
-## Verification state
-
-Last verified commit:
-Tests actually run:
-Checks actually run:
-Known failing checks:
-Unverified claims from prior work:
-
-## Current task
-
-Goal:
-Files/areas likely involved:
-Constraints:
-Definition of done:
-
-## Next actions
-
-1.
-2.
-3.
-
-## Risks / watch-outs
+## Known persistent risks / technical debt
 
 - 
+
+## Verification baseline
+
+Last known production/release state:
+Important test suites/checks:
+Known persistent failing checks:
+
+Do not use this section as proof that old checks still pass after new changes. Current-task verification belongs in `docs/NOW.md`.
 
 ## Lifecycle review
 
@@ -72,19 +67,21 @@ Evidence:
 Next-stage gaps, if any:
 - 
 
-Do not advance the lifecycle stage because of ambition alone. Use real product risk, traffic, operational commitments, financial exposure, or organizational requirements.
+## Context rules
 
-## Handoff protocol
+- Keep this file short enough for a new agent to scan quickly.
+- Move detailed decisions to ADRs/design docs and reference them here.
+- Update only when durable project facts change.
+- Do not duplicate `PHASES.md` or `NOW.md`.
+- Git history preserves old versions; remove stale facts instead of accumulating history.
 
-Before ending a meaningful work session, update this file with the new state and verification results.
+## New-session protocol
 
-When starting a new session or switching agents:
-1. read root `AGENTS.md`;
-2. read `docs/CONTEXT.md`;
-3. read `docs/PHASES.md`;
-4. read lifecycle/profile guidance relevant to the project;
-5. inspect referenced ADRs/design docs;
-6. verify Git branch/status before changing code;
-7. never assume a previous agent's stated test result is current if the code has changed since.
+1. Read root `AGENTS.md`.
+2. Read `docs/NOW.md`.
+3. Read this file.
+4. Verify Git branch/status.
+5. Inspect only files relevant to the current task.
+6. Read `PHASES.md`, design docs, ADRs, or specialist handbook modules only when the task requires them.
 
-Do not turn this into a chat transcript. Store only durable facts, decisions, verified state, assumptions, lifecycle status, and the immediate handoff.
+See `.engineering/workflow/context-budget.md` for the full context discipline.
