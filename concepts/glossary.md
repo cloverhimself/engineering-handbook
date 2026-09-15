@@ -1,0 +1,79 @@
+# Glossary
+
+Short definitions for terms used throughout the handbook.
+
+- **API** — a defined interface that lets software systems communicate.
+- **Endpoint** — one specific API operation, such as `POST /orders`.
+- **Middleware** — code that runs before/around request handling for tasks such as auth, validation, logging, or rate limiting.
+- **Controller** — HTTP-facing code that receives requests and returns responses.
+- **Service** — code containing business logic or orchestration.
+- **Repository** — a data-access abstraction used when isolating persistence is useful.
+- **Schema** — the structure and rules of a database.
+- **Constraint** — a rule enforced by the database, such as `UNIQUE` or `FOREIGN KEY`.
+- **Index** — a database structure that speeds up selected queries at the cost of extra storage/write work.
+- **Transaction** — a group of database operations that succeed or fail as one unit.
+- **Invariant** — a condition that must always remain true for the system to be correct.
+- **Authentication** — proving identity.
+- **Authorization** — deciding what an authenticated identity may do.
+- **RBAC** — Role-Based Access Control; permissions are grouped into roles.
+- **Session** — server-recognized authenticated login state.
+- **JWT** — a signed token format used to carry claims.
+- **Access token** — short-lived credential used to access protected resources.
+- **Refresh token** — longer-lived credential used to obtain new access tokens.
+- **Hashing** — one-way transformation used for things such as password storage.
+- **Encryption** — reversible transformation that protects confidentiality using a key.
+- **Monolith** — one deployable application containing multiple capabilities.
+- **Modular monolith** — a monolith with clear internal domain/module boundaries.
+- **Microservice** — an independently deployable service focused on a bounded capability.
+- **Cache** — temporary storage used to avoid repeated expensive work.
+- **Queue** — durable or semi-durable waiting area for asynchronous work.
+- **Worker** — process that consumes and executes queued jobs.
+- **Idempotency** — ability to repeat an operation without causing duplicate effects.
+- **Concurrency** — multiple operations overlapping in time.
+- **Race condition** — correctness bug caused by unpredictable ordering of concurrent operations.
+- **Lock** — mechanism that temporarily prevents conflicting operations.
+- **Optimistic concurrency** — detect conflicts at update time rather than locking early.
+- **Rate limit** — restriction on how often a client/action may be performed.
+- **RPS** — Requests Per Second.
+- **DAU** — Daily Active Users.
+- **MAU** — Monthly Active Users.
+- **Concurrent users** — users actively interacting with the system around the same time.
+- **Latency** — time required to complete an operation.
+- **Throughput** — amount of work completed per unit of time.
+- **Vertical scaling** — make one machine more powerful.
+- **Horizontal scaling** — add more machines/instances.
+- **Load balancer** — component that distributes traffic across application instances.
+- **CDN** — Content Delivery Network; serves cached content closer to users.
+- **Object storage** — storage optimized for files/blobs rather than relational rows.
+- **Webhook** — HTTP callback sent by one system to another when an event happens.
+- **Retry** — attempt an operation again after failure.
+- **Backoff** — increasing delay between retry attempts.
+- **Jitter** — random variation added to retry delays to avoid synchronized retries.
+- **Circuit breaker** — temporarily stop calling a failing dependency to avoid cascading failure.
+- **Timeout** — maximum time allowed for an operation before treating it as failed.
+- **Observability** — ability to understand system behavior from outputs such as logs, metrics, and traces.
+- **Log** — event record.
+- **Metric** — numeric measurement over time.
+- **Trace** — path of a request through components.
+- **SLI** — measured service-level indicator.
+- **SLO** — internal reliability target.
+- **SLA** — contractual service-level promise.
+- **p50/p95/p99** — latency percentiles showing the response time below which 50/95/99 percent of requests fall.
+- **Migration** — version-controlled database schema change.
+- **Rollback** — returning to a previous application/system state after a bad release.
+- **Soft delete** — mark data deleted while retaining the row.
+- **Hard delete** — physically remove the data.
+- **Ledger** — authoritative record of financial movements/entries.
+- **Reconciliation** — compare internal financial state with provider/bank records and resolve differences.
+- **Settlement** — movement/finalization of funds after payment authorization/capture.
+- **Refund** — return funds to a payer.
+- **Reversal** — negate a previous financial effect with an explicit opposite operation.
+- **Chargeback** — payment dispute where funds may be forcibly returned by the payment network/provider.
+- **ADR** — Architecture Decision Record; short document capturing context, decision, alternatives, and consequences.
+- **Tradeoff** — choosing one benefit while accepting another cost.
+- **Technical debt** — future maintenance/change cost created by current shortcuts or design choices.
+- **Coupling** — how strongly one module depends on another.
+- **Cohesion** — how closely related the responsibilities inside one module are.
+- **Dependency** — external package/service/module required by another component.
+- **Stateless service** — service instance that does not rely on its own memory/disk for durable user/business state between requests.
+- **Production-ready** — sufficiently secure, reliable, observable, recoverable, and maintainable for real users; not the same as high-scale architecture.
