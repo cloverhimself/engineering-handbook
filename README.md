@@ -1,24 +1,8 @@
 # Engineering Handbook
 
-A practical engineering rulebook for AI coding agents such as **Claude Code, Codex, Cursor, and similar tools**.
+A practical engineering rulebook and operating system for AI coding agents such as **Claude Code, Codex, Cursor, and similar tools**.
 
-You describe what you want to build. The AI uses this handbook to decide how the project should be structured, which engineering rules apply, what tradeoffs matter, and what should be documented before implementation.
-
-It covers:
-
-- architecture and scalability;
-- clean, maintainable code;
-- project and file structure;
-- APIs and backend conventions;
-- database design and integrity;
-- security;
-- reliability and observability;
-- testing;
-- product thinking;
-- payments, money movement, ledgers, refunds and reconciliation;
-- tax/compliance boundaries;
-- infrastructure and third-party costs;
-- engineering tradeoffs.
+You describe what you want to build. The AI uses this handbook to decide how the project should be structured, which engineering rules apply, what tradeoffs matter, how work should be phased, and what project state must be preserved between chats or agents.
 
 The goal is **conventional, production-proven engineering**, not maximum architectural complexity.
 
@@ -26,44 +10,33 @@ The goal is **conventional, production-proven engineering**, not maximum archite
 
 You do not need to read the whole handbook.
 
-1. Open the project you want to build in Claude Code, Codex, Cursor, or another coding agent.
+1. Open the project you want to build in your coding agent.
 2. Open [`BOOTSTRAP_PROMPT.md`](./BOOTSTRAP_PROMPT.md).
 3. Copy the prompt.
-4. Replace `WHAT I AM BUILDING` with a normal description of your product.
-5. Paste it into your coding agent from the project root.
+4. Replace `WHAT I AM BUILDING` with a normal product description.
+5. Paste it into the coding agent from the project root.
 
-The agent will then:
+The agent will:
 
-- inspect your existing project if there is one;
+- inspect an existing project without gratuitously rewriting it;
 - add this handbook under `.engineering/`;
-- choose the relevant project profile(s);
+- choose relevant project profiles;
+- choose only relevant specialist modules;
 - generate a small project-specific `AGENTS.md`;
 - create `docs/project-design.md`;
-- propose an appropriate architecture and folder structure;
-- document assumptions, scale, security, cost and tradeoffs;
-- stop before substantial implementation so you can review the design.
-
-You can describe the product casually. You do **not** need to know the database schema, architecture, traffic model, folder structure or scaling strategy first.
-
-Example:
-
-```text
-WHAT I AM BUILDING:
-
-I want an ecommerce platform for a streetwear brand.
-Customers should register, browse products, manage a cart and wishlist,
-save addresses, place orders, pay online and track orders.
-
-Staff should manage products, inventory and orders.
-Managers should also manage users, permissions and analytics.
-
-I want TypeScript, PostgreSQL and a REST API.
-The business will start small but the codebase should remain easy to scale and maintain.
-```
+- create and maintain `docs/PHASES.md` from setup through production readiness;
+- create and maintain `docs/CONTEXT.md` for new chats, multiple AI agents, and human handoffs;
+- propose architecture, database and folder structure;
+- document assumptions, traffic/scale, security, cost and tradeoffs;
+- enforce dependency/package discipline;
+- avoid excessive defensive programming for impossible internal states;
+- use supervisor/self-review mode for substantial changes;
+- plan clean commit and PR boundaries;
+- stop before substantial implementation so you can review the plan.
 
 ## Project profiles
 
-The handbook contains profiles that add extra rules depending on what you are building:
+Available profiles include:
 
 - SaaS
 - ecommerce
@@ -77,54 +50,100 @@ The handbook contains profiles that add extra rules depending on what you are bu
 - API-only service
 - dashboard
 
-A project can use multiple profiles. For example, a multi-vendor commerce platform might use `saas + marketplace + ecommerce + dashboard`.
+A project can combine profiles. A multi-vendor commerce platform might use `saas + marketplace + ecommerce + dashboard`.
 
-The coding agent selects the relevant profiles automatically and records the selection in the project design.
+See [`profiles/`](./profiles/).
 
-See [`profiles/`](./profiles/) for the profile rules.
+## Specialist engineering modules
 
-## Code quality
+The agent loads these only when relevant:
 
-Architecture alone is not enough. The handbook also tells agents how to write ordinary maintainable software:
+- API versioning
+- concurrency and locking
+- caching strategy
+- queues and background jobs
+- rate limiting
+- file uploads and media
+- authentication, sessions and JWTs
+- observability and SLOs
+- database indexing and query optimization
+- ledger and reconciliation
 
-- meaningful variable, function and module names;
-- cohesive functions with clear responsibilities;
-- low nesting and straightforward control flow;
-- standard language/framework syntax and semantics;
-- automated formatting and linting;
-- explicit side effects and error handling;
-- no giant god files;
-- no arbitrary abstraction layers;
-- domain-oriented file organization as projects grow;
-- no magic business values;
-- comments that explain *why*, not what the code already says;
-- small focused changes and reviewable refactors;
-- performance work based on actual workload, not guesswork.
+See [`specialists/`](./specialists/).
 
-There is deliberately **no arbitrary universal line limit** for functions or files. Size is treated as a signal to review cohesion and responsibility, not as a rule to game.
+## Clean code without dogma
 
-See [`code-quality/clean-code.md`](./code-quality/clean-code.md) and [`code-quality/project-structure.md`](./code-quality/project-structure.md).
+The handbook covers meaningful names, cohesive functions/modules, low nesting, standard formatting, explicit side effects, error handling, project structure, reviewable refactors, and performance discipline.
+
+There is no universal function/file line limit. Size is a signal to inspect cohesion and responsibility, not a metric to game.
+
+It also has two explicit AI safeguards:
+
+- [`code-quality/dependency-discipline.md`](./code-quality/dependency-discipline.md): do not install unnecessary, duplicate, abandoned, unsupported, or oversized libraries when the runtime/framework/existing dependencies already solve the problem.
+- [`code-quality/defensive-programming.md`](./code-quality/defensive-programming.md): defend real trust boundaries and plausible failures, but do not litter the codebase with branches for impossible states already guaranteed by reliable invariants.
+
+See [`code-quality/`](./code-quality/).
+
+## Persistent project memory
+
+AI chat context is temporary; project state should not be.
+
+Every serious project created with the bootstrap flow gets:
+
+### `docs/PHASES.md`
+
+A living roadmap from initial discovery through production readiness. Each phase has scope, deliverables, verification gates, status, decisions and deferred work. Agents update it as the product is built.
+
+### `docs/CONTEXT.md`
+
+A compact durable handoff containing current state, architecture, active assumptions, verified checks, current task, risks and next actions.
+
+When switching from Claude Code to Codex, starting a fresh chat, or handing work to another developer, the receiving agent reads `AGENTS.md`, `docs/CONTEXT.md`, `docs/PHASES.md` and relevant ADRs instead of relying on a manually written chat summary.
+
+Templates live in [`templates/`](./templates/).
+
+## Supervisor mode
+
+[`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md) defines an optional evidence-based review loop for substantial work.
+
+It scores areas such as correctness, readability, maintainability, security, testing, architecture fit, performance, failure handling, documentation accuracy and unnecessary complexity.
+
+Default readiness requires no critical dimension below 8/10 and an overall mean of at least 8.5/10. High-risk financial/auth/security work requires stronger correctness/security scores.
+
+The agent must justify scores with actual evidence and mark unverified dimensions as unverified. It must stop when further iteration would become churn rather than meaningful improvement.
+
+## Git, commits and pull requests
+
+[`workflow/git-commits-prs.md`](./workflow/git-commits-prs.md) tells agents to:
+
+- work in coherent reviewable units;
+- commit at meaningful checkpoints rather than every tiny edit or only once after a giant change;
+- avoid mixing unrelated refactors/features/dependency upgrades;
+- self-review diffs before PRs;
+- run applicable checks first;
+- keep PRs focused and split large work by meaningful layers;
+- update phases/context before handoff;
+- never commit, push, open PRs, merge or deploy unless the user/project explicitly authorizes it.
 
 ## Money, payments and financial systems
 
-The handbook includes stricter principles for systems that handle financial value.
-
-Depending on the selected profile, agents are instructed to consider:
+Financial systems receive stricter rules for:
 
 - exact monetary representation;
-- explicit currency/asset handling;
+- currencies/assets;
 - immutable transaction history;
 - ledger-based balances;
-- idempotent payment and transfer operations;
-- authorization, capture, settlement, reversal, refund and chargeback states;
-- payout separation in marketplaces;
-- provider webhook verification;
+- idempotent payments and transfers;
+- authorization/capture/settlement/reversal/refund/chargeback states;
+- marketplace payouts;
+- provider signature/reference verification;
 - reconciliation;
-- duplicate, delayed and reordered events;
-- fee and rounding rules;
+- duplicates, delayed and reordered events;
+- concurrency and locking;
+- fees and rounding;
 - auditability;
-- infrastructure and processor cost;
-- tax and regulatory requirements as externally verified inputs rather than guessed code.
+- processor/infrastructure cost;
+- tax/accounting/compliance requirements as verified external inputs rather than invented code.
 
 For wallets and fintech systems, financial correctness takes priority over convenience.
 
@@ -134,9 +153,9 @@ The handbook repeatedly asks:
 
 > What is the simplest conventional design that satisfies today's requirements, protects important invariants, remains understandable to ordinary developers, and leaves a reasonable path for tomorrow?
 
-That means it will not recommend Kafka, Redis, Kubernetes, Elasticsearch, microservices, queues or custom abstraction layers merely because they sound scalable.
+That means it will not recommend Kafka, Redis, Kubernetes, Elasticsearch, microservices, queues, custom abstraction layers, or extra packages merely because they sound scalable.
 
-It should be able to explain **what problem each additional component solves and when that component becomes necessary**.
+Each additional component should have a concrete problem it solves, a tradeoff, and a trigger that justified introducing it.
 
 ## Repository structure
 
@@ -145,7 +164,9 @@ engineering-handbook/
 ├── AGENTS.md
 ├── BOOTSTRAP_PROMPT.md
 ├── profiles/
+├── specialists/
 ├── code-quality/
+├── workflow/
 ├── architecture/
 ├── backend/
 ├── database/
@@ -161,21 +182,19 @@ engineering-handbook/
 
 ## Existing projects
 
-The bootstrap flow also works for existing projects.
-
-The agent is told to inspect the codebase first, preserve working conventions, and avoid gratuitous rewrites. The handbook should improve a project incrementally rather than forcing every application into the same architecture.
+The bootstrap flow works for existing projects too. Agents are instructed to inspect the codebase first, preserve working conventions, and improve incrementally instead of forcing every application into the same architecture.
 
 ## After setup
 
-Review the generated `docs/project-design.md`.
+Review `docs/project-design.md`, `docs/PHASES.md`, and `docs/CONTEXT.md`.
 
-If it looks reasonable, tell your coding agent:
+Then tell the agent:
 
 ```text
-The project design looks good. Begin implementation in the recommended phases.
+The project design and phases look good. Begin the current phase.
 Follow AGENTS.md and the engineering handbook throughout the project.
-Keep the design document and ADRs updated when important decisions change.
-Keep the codebase clean and conventional as it grows.
+Keep docs/project-design.md, docs/PHASES.md, docs/CONTEXT.md, and ADRs updated when meaningful decisions or project state change.
+Use supervisor mode for substantial changes.
 Run the relevant checks after each phase and do not claim completion for checks you did not actually run.
 ```
 
