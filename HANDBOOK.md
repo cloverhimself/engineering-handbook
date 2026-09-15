@@ -1,6 +1,6 @@
 # Engineering Handbook — Table of Contents
 
-Use this page as the reading map. Most projects should read the core rules, then only the profile, lifecycle, and specialist modules that apply.
+Use this page as the reading map. Most projects should read the core rules, then only the profile, lifecycle, stack, and specialist modules that apply.
 
 ## 1. Core
 
@@ -11,10 +11,14 @@ Use this page as the reading map. Most projects should read the core rules, then
 
 ## 2. Code quality
 
-- [`code-quality/clean-code.md`](./code-quality/clean-code.md)
-- [`code-quality/project-structure.md`](./code-quality/project-structure.md)
+- [`code-quality/code-craftsmanship.md`](./code-quality/code-craftsmanship.md) — universal readability, maintainability, data-structure, I/O, database, error, and efficiency rules.
+- [`code-quality/language-stack-overlays.md`](./code-quality/language-stack-overlays.md) — adapt implementation style to the actual language/runtime/framework.
+- [`code-quality/clean-code.md`](./code-quality/clean-code.md) — naming, functions, modules, formatting, comments, and review principles.
+- [`code-quality/project-structure.md`](./code-quality/project-structure.md) — folder/module organization, including separate top-level `frontend/` and `backend/` applications for conventional split full-stack projects.
 - [`code-quality/dependency-discipline.md`](./code-quality/dependency-discipline.md)
 - [`code-quality/defensive-programming.md`](./code-quality/defensive-programming.md)
+
+Universal principles should remain language-agnostic. Implementation should remain idiomatic to the selected stack.
 
 ## 3. Backend, data, security, and reliability
 
@@ -62,13 +66,15 @@ Choose one or more as appropriate:
 - [`finance/cost-engineering.md`](./finance/cost-engineering.md)
 - [`product/product-thinking.md`](./product/product-thinking.md)
 
-## 7. Delivery workflow
+## 7. Delivery and agent workflow
 
+- [`workflow/context-budget.md`](./workflow/context-budget.md) — low-token cold starts, context hygiene, multi-agent handoff, and minimum-sufficient reading.
 - [`workflow/git-commits-prs.md`](./workflow/git-commits-prs.md)
 - [`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md)
 - [`templates/project-design.md`](./templates/project-design.md)
 - [`templates/PHASES.md`](./templates/PHASES.md)
-- [`templates/CONTEXT.md`](./templates/CONTEXT.md)
+- [`templates/NOW.md`](./templates/NOW.md) — tiny active-task state for fresh chats/agents.
+- [`templates/CONTEXT.md`](./templates/CONTEXT.md) — stable project facts only.
 - [`templates/adr.md`](./templates/adr.md)
 - [`checklists/new-project.md`](./checklists/new-project.md)
 - [`checklists/production-readiness.md`](./checklists/production-readiness.md)
@@ -77,14 +83,31 @@ Choose one or more as appropriate:
 
 ```mermaid
 flowchart LR
-    A[Read core rules] --> B[Choose profile]
-    B --> C[Choose lifecycle stage]
-    C --> D[Load relevant specialists]
-    D --> E[Create project design]
-    E --> F[Create PHASES.md]
-    F --> G[Implement]
-    G --> H[Supervisor review]
-    H --> I[Update CONTEXT.md]
+    A[Read core rules] --> B[Detect stack]
+    B --> C[Choose profile]
+    C --> D[Choose lifecycle stage]
+    D --> E[Load relevant specialists]
+    E --> F[Create project design]
+    F --> G[Create PHASES + CONTEXT + NOW]
+    G --> H[Implement]
+    H --> I[Supervisor review]
+    I --> J[Refresh NOW]
 ```
+
+## New-chat cold start
+
+```text
+AGENTS.md
+   ↓
+docs/NOW.md
+   ↓
+docs/CONTEXT.md
+   ↓
+current task files/tests
+   ↓
+only then open PHASES / ADRs / deeper handbook modules if needed
+```
+
+Do not reread entire chats or the whole repository just to regain orientation when the project context files are current.
 
 Keep the handbook selective: do not load every module into every project. The goal is enough guidance to make sound engineering decisions without wasting context or encouraging unnecessary complexity.
