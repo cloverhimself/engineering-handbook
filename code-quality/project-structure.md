@@ -13,9 +13,51 @@ Folder structure should reduce cognitive load, make ownership obvious, and follo
 - Infrastructure-specific code should not leak throughout domain logic.
 - The project root should remain understandable at a glance.
 
-## Small application
+## Full-stack projects with separate frontend and backend
 
-A small application may legitimately use a simple structure:
+When a project has a distinct frontend application and backend/API, keep them as separate top-level applications under the same parent project/repository by default.
+
+```text
+project/
+  frontend/
+    src/
+    package.json
+  backend/
+    src/
+    package.json
+  docs/
+  AGENTS.md
+  README.md
+```
+
+This keeps runtime boundaries, dependencies, environment variables, tests, deployment configuration, and ownership clear.
+
+Do not mix backend controllers, database code, migrations, or server-only secrets inside the frontend application. Do not place frontend UI code inside the backend application.
+
+The frontend and backend may still live in the same Git repository and share documentation, CI, types, or tooling where useful.
+
+If shared code is genuinely required, place it in an explicit shared package rather than importing directly from the other application's private source tree:
+
+```text
+project/
+  frontend/
+  backend/
+  packages/
+    shared-types/
+  docs/
+```
+
+Do not create a shared package merely to avoid a few duplicated primitive types. Shared code should have a real cross-application ownership reason.
+
+### Exception
+
+If the selected framework intentionally combines frontend and backend in one application (for example, a full-stack framework with server routes/actions), follow the framework's conventional structure unless the product genuinely requires independently deployable frontend and backend applications.
+
+The rule is separation of deployable/runtime concerns, not separation for its own sake.
+
+## Small backend application
+
+A small backend may legitimately use a simple structure:
 
 ```text
 src/
@@ -64,7 +106,7 @@ src/
 
 Repositories are appropriate when persistence logic is substantial enough to deserve a boundary. A service should contain actual business rules or orchestration, not simply forward calls from controller to repository.
 
-## Frontend / full-stack application
+## Frontend application
 
 Prefer the framework's routing and component conventions. Organize shared UI separately from feature-specific UI.
 
