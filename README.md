@@ -1,194 +1,384 @@
 # Engineering Handbook
 
-A practical engineering rulebook and operating system for AI coding agents such as **Claude Code, Codex, Cursor, and similar tools**.
+A practical, beginner-friendly engineering handbook for building software with AI coding agents such as **Claude Code, Codex, Cursor, and similar tools**.
 
-You describe what you want to build. The AI uses this handbook to decide how the project should be structured, which engineering rules apply, what tradeoffs matter, how work should be phased, and what project state must be preserved between chats or agents.
+It is designed to answer two questions:
 
-The goal is **conventional, production-proven engineering**, not maximum architectural complexity.
+1. **How should this product be engineered?**
+2. **How do we make an AI agent follow good engineering practices throughout the whole project?**
 
-## Quick start
+The handbook covers system design, software architecture, code quality, databases, APIs, authentication, scalability, traffic, concurrency, security, reliability, testing, payments, money movement, project structure, Git workflow, project phases, multi-agent context, and production readiness.
 
-You do not need to read the whole handbook.
+The goal is not to make every project look like Netflix or Stripe.
 
-1. Open the project you want to build in your coding agent.
-2. Open [`BOOTSTRAP_PROMPT.md`](./BOOTSTRAP_PROMPT.md).
-3. Copy the prompt.
-4. Replace `WHAT I AM BUILDING` with a normal product description.
-5. Paste it into the coding agent from the project root.
+The goal is to build **clear, conventional, maintainable software that is as simple as possible and as sophisticated as necessary**.
 
-The agent will:
+---
 
-- inspect an existing project without gratuitously rewriting it;
-- add this handbook under `.engineering/`;
-- choose relevant project profiles;
-- choose the current lifecycle stage;
-- choose only relevant specialist modules;
-- generate a small project-specific `AGENTS.md`;
-- create `docs/project-design.md`;
-- create and maintain `docs/PHASES.md` from setup through production readiness;
-- create and maintain `docs/CONTEXT.md` for new chats, multiple AI agents, and human handoffs;
-- propose architecture, database and folder structure;
-- document assumptions, traffic/scale, security, cost and tradeoffs;
-- enforce dependency/package discipline;
-- avoid excessive defensive programming for impossible internal states;
-- use supervisor/self-review mode for substantial changes;
-- plan clean commit and PR boundaries;
-- stop before substantial implementation so you can review the plan.
+## Start here
 
-## Lifecycle stages
+If you are learning, start with:
 
-The handbook now distinguishes between:
+- **[Handbook Table of Contents](./HANDBOOK.md)**
+- **[Foundations: System Design Concepts Explained Simply](./concepts/foundations.md)**
+- **[Glossary](./concepts/glossary.md)**
 
-- **experiment / spike** — answer a question quickly;
-- **prototype** — prove UX or feasibility;
-- **MVP** — serve real early users with real correctness on core flows;
-- **production / growth** — operate reliably for a meaningful user base and business process;
-- **high-scale / high-criticality** — handle substantial traffic, strict reliability commitments, large financial exposure, or complex operational requirements.
+If you just want your AI agent to set up a project using the handbook:
 
-See [`lifecycle/stages.md`](./lifecycle/stages.md).
+- **[Copy the Bootstrap Prompt](./BOOTSTRAP_PROMPT.md)**
 
-The lifecycle stage changes how much rigor is expected around testing, observability, CI, backups, scaling infrastructure, runbooks, capacity modeling, and failure testing.
+---
 
-It does **not** weaken domain-critical correctness. An MVP wallet still needs correct money movement. A prototype that handles real credentials still needs secure auth boundaries.
+## How the handbook fits together
 
-A production product also does not automatically need microservices, Kubernetes, Redis, Kafka, or multiple databases. Production readiness and high-scale architecture are different things.
+```mermaid
+flowchart TD
+    A[Describe what you want to build] --> B[Bootstrap prompt]
+    B --> C[Core engineering rules]
+    C --> D[Choose project profile]
+    C --> E[Choose lifecycle stage]
+    D --> F[Choose specialist modules]
+    E --> F
+    F --> G[Generate project-specific AGENTS.md]
+    G --> H[Generate project-design.md]
+    H --> I[Generate PHASES.md]
+    I --> J[Build phase by phase]
+    J --> K[Supervisor review]
+    K --> L[Update CONTEXT.md]
+    L --> J
+```
 
-## Project profiles
+### Core rules
 
-Available profiles include:
+Rules that almost every project should follow: clarity, conventional architecture, database integrity, security boundaries, sensible dependencies, clean code, testing, and documented tradeoffs.
+
+### Project profile
+
+Describes the **type of product** being built.
+
+Examples:
 
 - SaaS
 - ecommerce
 - fintech
 - marketplace
 - wallet
-- content platform
-- internal tool
-- portfolio/static site
 - mobile app
-- API-only service
 - dashboard
+- API-only service
 
-A project can combine profiles. A multi-vendor commerce platform might use `saas + marketplace + ecommerce + dashboard`.
+A product may use several profiles at once.
 
-See [`profiles/`](./profiles/).
+### Lifecycle stage
 
-## Specialist engineering modules
+Describes **how mature the product currently is**.
 
-The agent loads these only when relevant:
+```text
+Experiment → Prototype → MVP → Production/Growth → High Scale/Criticality
+```
 
-- API versioning
-- concurrency and locking
-- caching strategy
-- queues and background jobs
-- rate limiting
-- file uploads and media
-- authentication, sessions and JWTs
-- observability and SLOs
-- database indexing and query optimization
-- ledger and reconciliation
+A prototype should not be forced to carry the same operational complexity as a mature production platform.
 
-See [`specialists/`](./specialists/).
+However, lifecycle stage does not weaken correctness in high-risk areas. A small MVP that handles real money still needs correct financial logic.
 
-## Clean code without dogma
+### Specialist modules
 
-The handbook covers meaningful names, cohesive functions/modules, low nesting, standard formatting, explicit side effects, error handling, project structure, reviewable refactors, and performance discipline.
+Deeper engineering guidance loaded only when relevant.
 
-There is no universal function/file line limit. Size is a signal to inspect cohesion and responsibility, not a metric to game.
+Examples include:
 
-It also has two explicit AI safeguards:
+- caching;
+- queues;
+- concurrency;
+- rate limiting;
+- API versioning;
+- file uploads;
+- sessions/JWTs;
+- observability/SLOs;
+- database indexing;
+- ledger/reconciliation.
 
-- [`code-quality/dependency-discipline.md`](./code-quality/dependency-discipline.md): do not install unnecessary, duplicate, abandoned, unsupported, or oversized libraries when the runtime/framework/existing dependencies already solve the problem.
-- [`code-quality/defensive-programming.md`](./code-quality/defensive-programming.md): defend real trust boundaries and plausible failures, but do not litter the codebase with branches for impossible states already guaranteed by reliable invariants.
+---
 
-See [`code-quality/`](./code-quality/).
+# Quick Start for AI-Assisted Projects
 
-## Persistent project memory
+You do **not** need to manually configure every rule.
 
-AI chat context is temporary; project state should not be.
+Open your project in Claude Code, Codex, Cursor, or another coding agent and copy the prompt from:
 
-Every serious project created with the bootstrap flow gets:
+**[`BOOTSTRAP_PROMPT.md`](./BOOTSTRAP_PROMPT.md)**
 
-### `docs/PHASES.md`
+Then describe your product normally.
 
-A living roadmap from initial discovery through production readiness. Each phase has scope, deliverables, verification gates, status, decisions and deferred work. Agents update it as the product is built.
+Example:
 
-It also records the current lifecycle stage so phase expectations are calibrated appropriately.
+```text
+WHAT I AM BUILDING:
 
-### `docs/CONTEXT.md`
+I want to build a multi-tenant school management platform.
+Schools should manage students, teachers, classes, attendance,
+results, fees and announcements.
 
-A compact durable handoff containing current state, architecture, lifecycle stage, active assumptions, verified checks, current task, risks and next actions.
+There will be school admins, teachers, parents and students.
+Each school must only access its own data.
 
-When switching from Claude Code to Codex, starting a fresh chat, or handing work to another developer, the receiving agent reads `AGENTS.md`, `docs/CONTEXT.md`, `docs/PHASES.md` and relevant ADRs instead of relying on a manually written chat summary.
+I want Node.js, Express, TypeScript and PostgreSQL.
+The first release will have a small number of schools,
+but I want the codebase to remain maintainable as it grows.
+```
 
-Templates live in [`templates/`](./templates/).
+The agent should then:
 
-## Supervisor mode
+```mermaid
+flowchart LR
+    A[Inspect project] --> B[Choose profiles]
+    B --> C[Choose lifecycle stage]
+    C --> D[Select specialist rules]
+    D --> E[Create AGENTS.md]
+    E --> F[Create project design]
+    F --> G[Create phases]
+    G --> H[Create context handoff]
+    H --> I[Wait for design approval]
+```
 
-[`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md) defines an optional evidence-based review loop for substantial work.
+It should **not** immediately generate thousands of lines of code.
 
-It scores areas such as correctness, readability, maintainability, security, testing, architecture fit, performance, failure handling, documentation accuracy and unnecessary complexity.
+---
 
-Default readiness requires no critical dimension below 8/10 and an overall mean of at least 8.5/10. High-risk financial/auth/security work requires stronger correctness/security scores.
+# What gets created inside a project
 
-The agent must justify scores with actual evidence and mark unverified dimensions as unverified. It must stop when further iteration would become churn rather than meaningful improvement.
+A serious project using the handbook should usually contain:
 
-## Git, commits and pull requests
+```text
+project/
+├── AGENTS.md
+├── .engineering/
+│   └── engineering-handbook
+│
+├── docs/
+│   ├── project-design.md
+│   ├── PHASES.md
+│   ├── CONTEXT.md
+│   └── adr/
+│
+└── src/
+```
 
-[`workflow/git-commits-prs.md`](./workflow/git-commits-prs.md) tells agents to:
+## `AGENTS.md`
 
-- work in coherent reviewable units;
-- commit at meaningful checkpoints rather than every tiny edit or only once after a giant change;
-- avoid mixing unrelated refactors/features/dependency upgrades;
-- self-review diffs before PRs;
-- run applicable checks first;
-- keep PRs focused and split large work by meaningful layers;
-- update phases/context before handoff;
-- never commit, push, open PRs, merge or deploy unless the user/project explicitly authorizes it.
+The project-specific instructions for the coding agent.
 
-## Money, payments and financial systems
+It should stay concise and reference the relevant handbook sections rather than copying the whole handbook.
 
-Financial systems receive stricter rules for:
+## `project-design.md`
+
+Explains what is being built and why major engineering decisions were made.
+
+It covers things such as:
+
+- users and roles;
+- architecture;
+- data model;
+- authentication;
+- permissions;
+- expected traffic;
+- security;
+- money/payment rules;
+- infrastructure cost;
+- tradeoffs;
+- scaling triggers.
+
+## `PHASES.md`
+
+The living implementation roadmap.
+
+Example:
+
+```text
+Phase 1 — Product and architecture
+Phase 2 — Database/auth foundations
+Phase 3 — Core workflows
+Phase 4 — Integrations
+Phase 5 — Security/reliability hardening
+Phase 6 — QA and production readiness
+Phase 7 — Launch
+```
+
+Agents update the file as work progresses instead of relying on chat memory.
+
+## `CONTEXT.md`
+
+The durable handoff file for:
+
+- starting a new AI chat;
+- switching between Claude Code and Codex;
+- bringing another developer into the project;
+- resuming work after a long break.
+
+It contains the current state, decisions, verified tests, active task, assumptions, risks, and next actions.
+
+---
+
+# A simple picture of a normal web system
+
+Before thinking about complex infrastructure, most products begin roughly like this:
+
+```mermaid
+flowchart LR
+    U[User] --> F[Frontend]
+    F --> A[Backend API]
+    A --> D[(PostgreSQL)]
+    A --> O[Object Storage]
+    A --> E[Email / External Services]
+```
+
+As real requirements appear, the architecture may evolve:
+
+```mermaid
+flowchart TD
+    U[Users] --> CDN[CDN]
+    CDN --> LB[Load Balancer]
+    LB --> A1[API Instance]
+    LB --> A2[API Instance]
+    A1 --> DB[(Primary Database)]
+    A2 --> DB
+    A1 --> C[Cache]
+    A2 --> C
+    A1 --> Q[Job Queue]
+    A2 --> Q
+    Q --> W[Workers]
+    DB --> R[(Read Replica)]
+```
+
+The handbook's rule is:
+
+> Do not jump to the second diagram until a real requirement justifies each additional component.
+
+---
+
+# Major handbook areas
+
+The full navigation lives in **[HANDBOOK.md](./HANDBOOK.md)**, but the major sections are:
+
+| Area | What it teaches |
+|---|---|
+| Foundations | APIs, middleware, databases, transactions, caching, queues, auth, scaling, concurrency, webhooks, metrics and other core concepts |
+| Architecture | How to choose system boundaries and make tradeoffs |
+| Code Quality | Naming, functions, modules, formatting, complexity, defensive programming and dependencies |
+| Backend | Request flow, controllers/services, APIs and conventions |
+| Database | Schema design, constraints, migrations, transactions, indexes and query optimization |
+| Security | Authentication, authorization, trust boundaries, uploads, secrets and abuse controls |
+| Reliability | Timeouts, retries, idempotency, failure handling and recovery |
+| Scalability | Traffic, concurrency, capacity, load balancing and scaling strategies |
+| Finance | Money representation, payments, refunds, tax boundaries, ledgers and reconciliation |
+| Workflow | Commits, PRs, phases, context handoff and supervisor review |
+| Profiles | Rules tailored to ecommerce, SaaS, fintech, wallet, marketplace, mobile and other product types |
+| Lifecycle | Different expectations for prototypes, MVPs, production and high-scale systems |
+
+---
+
+# Design principles the handbook strongly enforces
+
+The handbook pushes AI agents toward these behaviors:
+
+- prefer framework-native and widely understood solutions;
+- use meaningful variable, function, module and file names;
+- keep functions/modules cohesive rather than chasing arbitrary line-count limits;
+- do not hide programmer mistakes behind excessive defensive fallbacks;
+- do not install packages when the platform or an existing dependency already solves the problem cleanly;
+- avoid unsupported or abandoned libraries;
+- use database constraints for real data invariants;
+- treat authentication and authorization as separate concerns;
+- distinguish total users, active users, concurrent users and requests per second;
+- add caching only when repeated work is actually expensive;
+- add queues only when asynchronous processing solves a real problem;
+- make retryable operations idempotent where necessary;
+- treat payments and money movement as auditable state transitions;
+- never guess jurisdiction-specific tax or compliance rules;
+- document meaningful tradeoffs;
+- create focused commits and reviewable PRs;
+- maintain project context outside chat;
+- use supervisor review without creating endless AI refactor loops.
+
+---
+
+# Money and financial systems
+
+Financial systems get stricter rules.
+
+A basic financial flow may look like:
+
+```mermaid
+flowchart LR
+    U[User initiates payment] --> P[Payment Provider]
+    P --> W[Webhook]
+    W --> V[Verify signature/reference]
+    V --> I[Idempotent payment processing]
+    I --> L[Ledger / transaction record]
+    L --> O[Order/account state]
+    L --> R[Reconciliation]
+```
+
+The handbook covers:
 
 - exact monetary representation;
-- currencies/assets;
-- immutable transaction history;
-- ledger-based balances;
-- idempotent payments and transfers;
-- authorization/capture/settlement/reversal/refund/chargeback states;
-- marketplace payouts;
-- provider signature/reference verification;
+- currency handling;
+- payment states;
+- refunds;
+- reversals;
+- settlement;
+- fees;
+- payout flows;
+- immutable ledger history;
 - reconciliation;
-- duplicates, delayed and reordered events;
-- concurrency and locking;
-- fees and rounding;
-- auditability;
-- processor/infrastructure cost;
-- tax/accounting/compliance requirements as verified external inputs rather than invented code.
+- duplicate/delayed webhooks;
+- concurrency around balances;
+- provider references;
+- tax/accounting inputs;
+- auditability.
 
-For wallets and fintech systems, financial correctness takes priority over convenience regardless of lifecycle stage.
+For wallets and fintech systems, financial correctness takes priority over convenience.
 
-## Core philosophy
+---
 
-The handbook repeatedly asks:
+# Clean code without dogma
 
-> What is the simplest conventional design that satisfies today's requirements, current lifecycle stage, and real risk level, protects important invariants, remains understandable to ordinary developers, and leaves a reasonable path for tomorrow?
+The handbook does **not** enforce rules like:
 
-That means it will not recommend Kafka, Redis, Kubernetes, Elasticsearch, microservices, queues, custom abstraction layers, or extra packages merely because they sound scalable.
+```text
+Every function must be < 20 lines.
+Every file must be < 200 lines.
+Every database call needs a repository class.
+Every project needs dependency injection.
+```
 
-Each additional component should have a concrete problem it solves, a tradeoff, and a trigger that justified introducing it.
+Instead it asks:
 
-## Repository structure
+- Does this function have one coherent purpose?
+- Does this module contain unrelated responsibilities?
+- Is this abstraction solving a real problem?
+- Can a normal developer understand this code quickly?
+- Is complexity justified by requirements?
+
+A long function is a signal to inspect, not automatic proof of bad code.
+
+---
+
+# Repository map
 
 ```text
 engineering-handbook/
-├── AGENTS.md
-├── BOOTSTRAP_PROMPT.md
-├── lifecycle/
-├── profiles/
-├── specialists/
-├── code-quality/
-├── workflow/
+├── README.md                 # Entry point
+├── HANDBOOK.md               # Full table of contents / reading map
+├── BOOTSTRAP_PROMPT.md       # Copy-paste setup prompt
+├── AGENTS.md                 # Core engineering constitution
+│
+├── concepts/                 # Beginner foundations and glossary
+├── lifecycle/                # Prototype → production maturity rules
+├── profiles/                 # SaaS, ecommerce, fintech, wallet, etc.
+├── specialists/              # Deep technical modules
+├── code-quality/             # Code and dependency rules
+├── workflow/                 # Supervisor, Git, PR workflow
 ├── architecture/
 ├── backend/
 ├── database/
@@ -202,27 +392,28 @@ engineering-handbook/
 └── SOURCES.md
 ```
 
-## Existing projects
+---
 
-The bootstrap flow works for existing projects too. Agents are instructed to inspect the codebase first, preserve working conventions, choose the lifecycle stage from the actual state of the product, and improve incrementally instead of forcing every application into the same architecture.
+# Where to go next
 
-## After setup
+If you want to **learn the concepts**, go to:
 
-Review `docs/project-design.md`, `docs/PHASES.md`, and `docs/CONTEXT.md`.
+**[Foundations →](./concepts/foundations.md)**
 
-Then tell the agent:
+If you want to **browse everything**, go to:
 
-```text
-The project design and phases look good. Begin the current phase.
-Follow AGENTS.md and the engineering handbook throughout the project.
-Keep docs/project-design.md, docs/PHASES.md, docs/CONTEXT.md, and ADRs updated when meaningful decisions, lifecycle stage, or project state change.
-Use supervisor mode for substantial changes.
-Do not introduce next-stage infrastructure early unless current risk or measured requirements justify it.
-Run the relevant checks after each phase and do not claim completion for checks you did not actually run.
-```
+**[Full Handbook Table of Contents →](./HANDBOOK.md)**
 
-## References
+If you want to **use it immediately with an AI agent**, go to:
 
-This handbook is an original engineering synthesis rather than copied book text. See [`SOURCES.md`](./SOURCES.md) for books, engineering references and public standards that influence it.
+**[Bootstrap Prompt →](./BOOTSTRAP_PROMPT.md)**
 
-AI accelerates implementation. It does not remove the need for engineering judgment.
+---
+
+## Philosophy
+
+Good engineering is not about using the most technology.
+
+It is about understanding the problem, protecting the important invariants, choosing reasonable tradeoffs, and keeping the system understandable as it evolves.
+
+> Build the simplest conventional system that correctly solves today's problem and leaves a sensible path for tomorrow.
