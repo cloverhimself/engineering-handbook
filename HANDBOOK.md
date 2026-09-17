@@ -1,6 +1,6 @@
 # Engineering Handbook — Table of Contents
 
-Use this page as the reading map. Most projects should read the core rules, then only the profile, lifecycle, stack, and specialist modules that apply.
+Use this page as the reading map. Most projects should read the core rules, then only the profile, lifecycle, stack, technology-selection, and specialist modules that apply.
 
 ## 1. Core
 
@@ -26,7 +26,7 @@ Universal principles should remain language-agnostic. Implementation should rema
 - [`database/design.md`](./database/design.md)
 - [`security/security.md`](./security/security.md)
 - [`reliability/production.md`](./reliability/production.md)
-- [`testing/strategy.md`](./testing/strategy.md)
+- [`testing/strategy.md`](./testing/strategy.md) — evidence scope, discovery counts, tenant-boundary tests, and lifecycle-calibrated automation.
 
 ## 4. Specialist modules
 
@@ -66,12 +66,13 @@ Choose one or more as appropriate:
 - [`finance/cost-engineering.md`](./finance/cost-engineering.md)
 - [`product/product-thinking.md`](./product/product-thinking.md)
 
-## 7. Delivery and agent workflow
+## 7. Delivery, technology selection, and agent workflow
 
+- [`workflow/technology-selection.md`](./workflow/technology-selection.md) — capability-before-vendor decisions, deployment constraints, database/access-layer selection, build-vs-buy, auth, hosting, and provisional defaults.
 - [`workflow/project-readme-standard.md`](./workflow/project-readme-standard.md) — professional project README structure, verified setup instructions, repository map, API/docs linking, and anti-slop rules.
 - [`workflow/context-budget.md`](./workflow/context-budget.md) — low-token cold starts, context hygiene, multi-agent handoff, and minimum-sufficient reading.
 - [`workflow/git-commits-prs.md`](./workflow/git-commits-prs.md)
-- [`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md)
+- [`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md) — evidence-based final/phase review, canonical-repo verification, and documentation reconciliation.
 - [`templates/project-design.md`](./templates/project-design.md)
 - [`templates/PHASES.md`](./templates/PHASES.md)
 - [`templates/NOW.md`](./templates/NOW.md) — tiny active-task state for fresh chats/agents.
@@ -84,15 +85,16 @@ Choose one or more as appropriate:
 
 ```mermaid
 flowchart LR
-    A[Read core rules] --> B[Detect stack]
-    B --> C[Choose profile]
-    C --> D[Choose lifecycle stage]
+    A[Read core rules] --> B[Detect stack + deployment constraints]
+    B --> C[Choose profile + lifecycle]
+    C --> D[Select capability before vendor]
     D --> E[Load relevant specialists]
     E --> F[Create project design]
     F --> G[Create PHASES + CONTEXT + NOW]
-    G --> H[Implement]
-    H --> I[Supervisor review]
-    I --> J[Refresh NOW]
+    G --> H[Implement current phase]
+    H --> I[Verify with evidence]
+    I --> J[Supervisor review]
+    J --> K[Reconcile docs + canonical repo]
 ```
 
 ## New-chat cold start
@@ -106,9 +108,11 @@ docs/CONTEXT.md
    ↓
 current task files/tests
    ↓
-only then open PHASES / ADRs / deeper handbook modules if needed
+only then open PHASES / project design / ADRs / deeper handbook modules if needed
 ```
 
 Do not reread entire chats or the whole repository just to regain orientation when the project context files are current.
 
 Keep the handbook selective: do not load every module into every project. The goal is enough guidance to make sound engineering decisions without wasting context or encouraging unnecessary complexity.
+
+At phase/project completion, the canonical repository — not an ephemeral preview workspace — is the final source of truth. Verification claims, README/config examples, PHASES/NOW/CONTEXT, and implementation should agree before work is declared complete.
