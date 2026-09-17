@@ -1,20 +1,33 @@
 # Production Readiness Checklist
 
-- Build, lint/typecheck, and tests pass.
-- Production configuration validated.
-- Secrets are not committed or logged.
+- Build, lint/typecheck, and relevant tests pass.
+- Test commands discovered and executed the expected tests; meaningful discovered/passed/failed counts are recorded when useful.
+- Automated, manual, provider/runtime-verified, and unverified behavior are clearly distinguished.
+- Production configuration validated against actual configuration reads.
+- `.env.example` / config documentation matches the application and contains no real secrets.
+- Secrets are not committed, logged, exposed to clients, or embedded in public config accidentally.
+- Deployment/runtime assumptions are verified: durable storage, process/port model, runtime/build output, connection behavior, secrets, and region constraints as relevant.
 - Database migrations reviewed and tested.
+- Database invariants reviewed: uniqueness, allowed state sets, foreign keys, referential/delete behavior, transactions, tenant boundaries, and concurrency-sensitive rules.
 - Backups/restore expectations defined.
-- Authentication and authorization reviewed.
+- Authentication and authorization reviewed separately; external identity-provider success is not treated as sufficient application authorization/provisioning.
+- Cross-tenant and direct-child-resource access paths are tested where multi-tenancy exists.
 - Rate limits/abuse controls applied where appropriate.
-- Input validation and upload limits reviewed.
+- Structured input validation reviewed, including IDs, enums, dates/times, amounts, URLs, and upload limits as relevant.
+- Date/time/calendar semantics are explicit where business behavior depends on them.
 - External calls have timeouts/failure handling.
 - Payment/webhook idempotency verified where applicable.
-- Health/readiness behavior appropriate.
+- Health/readiness endpoints report observed state rather than hard-coded assumptions.
 - Logs contain enough diagnostic context without secrets.
-- Error responses do not leak internals.
-- Critical audit events are captured.
-- Capacity assumptions remain reasonable.
+- Expected client errors are deliberate; unexpected internal/SQL/provider errors are not exposed.
+- Critical audit events are captured where required.
+- Capacity assumptions remain reasonable and numeric defaults/triggers are sourced or clearly provisional.
 - Cost surprises/usage-based services reviewed.
-- Rollback or forward-fix strategy exists.
-- Documentation updated.
+- Unused/scaffold dependencies and stale configuration reviewed.
+- Code organization reviewed for both unnecessary abstraction and growing god files/modules.
+- Rollback or forward-fix strategy exists where failure risk warrants it.
+- README commands, paths, endpoints, status, architecture, and test claims match the repository.
+- `PHASES`, `NOW`, `CONTEXT`, project design, ADRs, API docs, and README do not contradict durable implementation decisions.
+- No new implementation phase has been silently invented beyond the approved roadmap.
+- Canonical repository contains the reviewed final state; ephemeral/local-only changes are not counted as complete.
+- Remaining risks, limitations, assumptions, and intentionally deferred work are documented.
