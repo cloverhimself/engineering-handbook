@@ -3,15 +3,25 @@
 - Problem and target users defined.
 - V1 scope separated from future ideas.
 - Main user journeys documented.
+- Lifecycle stage selected and justified.
 - Data classification and sensitive data identified.
-- Authentication/authorization needs defined.
-- Expected scale and traffic estimated.
-- Persistence model selected with justification.
-- External services listed with failure/cost implications.
+- Authentication, internal provisioning, and authorization needs defined.
+- Expected scale and traffic estimated without fake precision.
+- Deployment/runtime constraints verified rather than inferred from scaffolding.
+- Required system properties identified: durability, availability, security, latency, portability, etc.
+- Persistence model selected with justification and deployment durability checked.
+- Database access layer chosen deliberately: raw SQL, query builder, or ORM.
+- Technology capability separated from vendor/provider choice.
+- Build-vs-buy decisions considered for auth, database hosting, storage, email, payments, monitoring, and similar services.
+- External services listed with failure, lock-in, and cost implications.
+- Scaffold/default dependencies and configuration audited for actual need.
+- Core database invariants identified: uniqueness, allowed states, foreign keys, delete behavior, tenant boundaries, transactions, concurrency rules.
+- Date/time/calendar semantics defined where product behavior depends on them.
 - Money/tax/payment requirements confirmed if applicable.
 - Security threats considered.
-- Deployment and environment strategy chosen.
+- Health/readiness expectations defined if applicable.
 - Logging/monitoring expectations defined.
-- Testing strategy defined.
+- Testing strategy distinguishes automated, manual, provider/runtime, and unverified checks.
 - Cost assumptions recorded.
-- Major tradeoffs captured as ADRs.
+- Canonical repository/source-of-truth and durable project docs identified.
+- Major tradeoffs captured as ADRs when the decision is significant enough to preserve.
