@@ -17,7 +17,7 @@ Before substantial implementation:
 
 1. Inspect the current codebase if one already exists. Do not destroy or unnecessarily restructure working code.
 2. Make the engineering handbook available inside this project under `.engineering/`. Prefer a Git submodule when Git is available; otherwise use an appropriate non-destructive local setup.
-3. Read `.engineering/AGENTS.md`, `.engineering/lifecycle/stages.md`, `.engineering/code-quality/code-craftsmanship.md`, `.engineering/code-quality/language-stack-overlays.md`, `.engineering/code-quality/dependency-discipline.md`, `.engineering/code-quality/defensive-programming.md`, and `.engineering/workflow/context-budget.md`.
+3. Read `.engineering/AGENTS.md`, `.engineering/lifecycle/stages.md`, `.engineering/code-quality/code-craftsmanship.md`, `.engineering/code-quality/language-stack-overlays.md`, `.engineering/code-quality/dependency-discipline.md`, `.engineering/code-quality/defensive-programming.md`, `.engineering/workflow/context-budget.md`, and `.engineering/workflow/project-readme-standard.md`.
 4. Select the relevant project profile or profiles from `.engineering/profiles/` based on what I am building. Use multiple profiles when appropriate and record why they apply.
 5. Select the current lifecycle stage from `.engineering/lifecycle/stages.md`: experiment/spike, prototype, MVP, production/growth, or high-scale/high-criticality. If I did not specify one, infer conservatively and explain the choice. Do not choose high-scale/high-criticality without concrete evidence.
 6. Identify the actual stack: language(s), runtime, frontend/backend framework(s), database/query layer, package manager/build tool, test framework, formatter/linter/type checker, and deployment/runtime constraints. Apply universal code-quality principles while keeping the implementation idiomatic to that language/framework. Do not force patterns from one language onto another.
@@ -30,7 +30,8 @@ Before substantial implementation:
 13. Create `docs/NOW.md` using `.engineering/templates/NOW.md`. Use it as the small active-task handoff for new chats/agents. Update it after meaningful work sessions and replace stale information rather than appending a diary.
 14. Follow `.engineering/workflow/context-budget.md`: new sessions should cold-start from `AGENTS.md`, `docs/NOW.md`, and `docs/CONTEXT.md`, then inspect only task-relevant source files. Read `PHASES.md`, project design, ADRs, and specialist modules only when the task needs them. Do not reread old chats to reconstruct state when these files are current.
 15. For a conventional project with separate frontend and backend applications, keep them as separate top-level folders under the same parent project, for example `frontend/` and `backend/`. Do not mix backend-only code, database access, server secrets, or migrations into the frontend tree. Use a different structure only when the chosen full-stack framework intentionally combines them or there is a documented reason.
-16. Based on my product description, fill the design document with reasonable initial assumptions for:
+16. Create or improve the root `README.md` using `.engineering/workflow/project-readme-standard.md`. Write it from verified repository facts, not generic AI prose. Include only relevant sections such as overview, status, features, stack, architecture, meaningful repository structure, real local-development commands, environment/config requirements, database/migrations, API route groups or documentation links, testing, deployment, important engineering decisions, deeper documentation links, contributing, and license. Verify every command, path, endpoint, and claim before including it. Keep deep details in `docs/` and link to them instead of turning the README into a giant manual.
+17. Based on my product description, fill the design document with reasonable initial assumptions for:
    - users and roles
    - selected project profiles
    - lifecycle stage and stage rationale
@@ -63,17 +64,17 @@ Before substantial implementation:
    - rejected unnecessary complexity
    - future scaling triggers
    - lifecycle transition triggers
-17. Prefer conventional, framework-native, boring, well-understood approaches. Do not introduce microservices, queues, Redis, Kafka, Kubernetes, Elasticsearch, custom frameworks, unnecessary abstraction layers, or other infrastructure unless current requirements justify them.
-18. Do not confuse "production-ready" with "high-scale architecture." A production system may still correctly be a modular monolith with one relational database.
-19. Follow `.engineering/code-quality/code-craftsmanship.md`. Optimize code for comprehension, correctness, changeability, and appropriate efficiency. Use meaningful domain names, cohesive functions/modules, clear control flow, suitable data structures, bounded I/O, efficient database access, explicit mutation, meaningful errors, and profiling/measurement before complex optimization.
-20. Follow `.engineering/code-quality/language-stack-overlays.md`. Use the actual language's idioms, type system, error model, concurrency model, formatter/linter/static-analysis tools, and framework conventions. Inspect representative nearby files in existing codebases before creating a new pattern.
-21. Follow `.engineering/code-quality/dependency-discipline.md`. Do not install unnecessary, duplicate, unsupported, abandoned, or oversized libraries when the runtime, framework, an existing dependency, or a small local implementation already solves the problem clearly.
-22. Follow `.engineering/code-quality/defensive-programming.md`. Defend real trust boundaries and plausible failure modes, but do not add branches for impossible internal states already guaranteed by trustworthy types, validated construction, database constraints, or controlled invariants. Do not hide programmer bugs behind fake defaults.
-23. Clearly distinguish facts I gave you from assumptions you made. Mark assumptions that should be confirmed later, but do not block initial setup on minor unknowns.
-24. Do not guess jurisdiction-specific tax, legal, compliance, accounting, KYC/AML, licensing, privacy, or regulatory rules. Treat them as requirements that must come from a verified source or configuration.
-25. Follow `.engineering/workflow/git-commits-prs.md`. Plan coherent commits and PR boundaries, but do not commit, push, open PRs, merge, or deploy unless I or the project instructions explicitly authorize those actions.
-26. Use `.engineering/workflow/supervisor-mode.md` for substantial or high-risk work. Self-review the diff, run applicable checks, score the change using evidence, fix material issues, and repeat until the readiness threshold is met or further changes would only create churn. Never invent test results or scores for unverified dimensions.
-27. Do not begin substantial feature implementation yet.
+18. Prefer conventional, framework-native, boring, well-understood approaches. Do not introduce microservices, queues, Redis, Kafka, Kubernetes, Elasticsearch, custom frameworks, unnecessary abstraction layers, or other infrastructure unless current requirements justify them.
+19. Do not confuse "production-ready" with "high-scale architecture." A production system may still correctly be a modular monolith with one relational database.
+20. Follow `.engineering/code-quality/code-craftsmanship.md`. Optimize code for comprehension, correctness, changeability, and appropriate efficiency. Use meaningful domain names, cohesive functions/modules, clear control flow, suitable data structures, bounded I/O, efficient database access, explicit mutation, meaningful errors, and profiling/measurement before complex optimization.
+21. Follow `.engineering/code-quality/language-stack-overlays.md`. Use the actual language's idioms, type system, error model, concurrency model, formatter/linter/static-analysis tools, and framework conventions. Inspect representative nearby files in existing codebases before creating a new pattern.
+22. Follow `.engineering/code-quality/dependency-discipline.md`. Do not install unnecessary, duplicate, unsupported, abandoned, or oversized libraries when the runtime, framework, an existing dependency, or a small local implementation already solves the problem clearly.
+23. Follow `.engineering/code-quality/defensive-programming.md`. Defend real trust boundaries and plausible failure modes, but do not add branches for impossible internal states already guaranteed by trustworthy types, validated construction, database constraints, or controlled invariants. Do not hide programmer bugs behind fake defaults.
+24. Clearly distinguish facts I gave you from assumptions you made. Mark assumptions that should be confirmed later, but do not block initial setup on minor unknowns.
+25. Do not guess jurisdiction-specific tax, legal, compliance, accounting, KYC/AML, licensing, privacy, or regulatory rules. Treat them as requirements that must come from a verified source or configuration.
+26. Follow `.engineering/workflow/git-commits-prs.md`. Plan coherent commits and PR boundaries, but do not commit, push, open PRs, merge, or deploy unless I or the project instructions explicitly authorize those actions.
+27. Use `.engineering/workflow/supervisor-mode.md` for substantial or high-risk work. Self-review the diff, run applicable checks, score the change using evidence, fix material issues, and repeat until the readiness threshold is met or further changes would only create churn. Never invent test results or scores for unverified dimensions.
+28. Do not begin substantial feature implementation yet.
 
 When setup is complete, show me:
 - the files you created or changed;
@@ -86,13 +87,14 @@ When setup is complete, show me:
 - what has intentionally been deferred because of the current lifecycle stage;
 - the major assumptions you made;
 - the generated project phases;
+- how the README is structured and which deeper docs it links to;
 - how new agent/chat sessions should cold-start with minimal context;
 - the triggers that would justify moving to the next lifecycle stage;
 - anything genuinely important I should decide before implementation;
 - the recommended first implementation phase.
 ```
 
-After reviewing the generated project design, phases, and context, you can continue with:
+After reviewing the generated project design, phases, context, and README, you can continue with:
 
 ```text
 The project design and phases look good. Begin the current phase.
@@ -100,6 +102,7 @@ Follow AGENTS.md and the engineering handbook throughout the project.
 Keep docs/NOW.md current for the active task.
 Update docs/CONTEXT.md only when durable project facts or decisions change.
 Update docs/PHASES.md only when phase state or scope changes.
+Keep README.md accurate when setup, commands, architecture, public API, or important developer-facing behavior changes. Do not add generic promotional filler.
 Use supervisor mode for substantial changes.
 Do not add next-stage infrastructure early unless current risk or measured requirements justify it.
 Run the relevant formatting, linting, type checks, tests, migrations, builds, and verification after each phase and do not claim completion for checks you did not actually run.
