@@ -17,13 +17,14 @@ Before substantial implementation:
 2. Read `templates/project-design.md` and complete the relevant sections in the project documentation.
 3. Select the relevant profile(s) from `profiles/` and record why they apply.
 4. Select the current lifecycle stage using `lifecycle/stages.md`, record why it applies, and note which stricter controls are required by domain risk.
-5. Read `code-quality/clean-code.md`, `code-quality/project-structure.md`, and `workflow/technology-selection.md` when technology/provider choices are not already settled.
+5. Read `code-quality/clean-code.md`, `code-quality/project-structure.md`, `workflow/functional-acceptance.md`, and `workflow/technology-selection.md` when technology/provider choices are not already settled.
 6. Identify functional requirements, non-functional requirements, expected scale, trust boundaries, persistence/durability needs, external dependencies, deployment constraints, and budget constraints.
-7. Verify relevant platform/runtime constraints from actual documentation/environment evidence. Do not convert scaffold conventions into imaginary hard platform limits.
-8. Inspect existing project conventions and follow them unless there is a strong reason not to.
-9. Audit scaffold/default dependencies and configuration rather than assuming they are required.
-10. State important assumptions. Do not silently invent business rules.
-11. For major choices, compare at least one simpler alternative and document why the chosen option is appropriate.
+7. Identify the primary user journeys whose failure would make the product materially unusable. Plan how they will be functionally accepted before the relevant phase is complete.
+8. Verify relevant platform/runtime constraints from actual documentation/environment evidence. Do not convert scaffold conventions into imaginary hard platform limits.
+9. Inspect existing project conventions and follow them unless there is a strong reason not to.
+10. Audit scaffold/default dependencies and configuration rather than assuming they are required.
+11. State important assumptions. Do not silently invent business rules.
+12. For major choices, compare at least one simpler alternative and document why the chosen option is appropriate.
 
 Do not begin by generating large amounts of code.
 
@@ -240,27 +241,33 @@ Map expected client errors deliberately. Log unexpected internal errors server-s
 
 Design mutation endpoints with concurrency and duplicate requests in mind.
 
-## 15. Testing and verification
+## 15. Testing, functional acceptance, and verification
 
 Tests should protect behavior and important invariants, not implementation trivia.
+
+Follow `testing/strategy.md` and `workflow/functional-acceptance.md`.
 
 Use an appropriate mix of:
 - unit tests for isolated business rules;
 - integration tests for database and infrastructure boundaries;
 - API tests for contracts;
-- end-to-end tests for critical flows;
+- end-to-end tests for critical flows when justified;
 - load tests for capacity-sensitive systems;
-- explicit manual verification for behavior not automated at the current stage.
+- explicit browser/device/manual verification for behavior not automated at the current stage.
 
-Critical flows such as authentication, authorization, tenant isolation, payments, order state transitions, ledger operations, and destructive operations require happy-path and failure-path tests.
+Critical flows such as authentication, authorization, tenant isolation, payments, order state transitions, ledger operations, destructive operations, and primary product journeys require happy-path and relevant failure-path verification.
+
+A user-facing feature is not complete merely because its API passes tests or the frontend builds. Exercise the actual journey through the highest practical layer. Verify the resulting state, not only that a request returned success.
+
+For example, if the feature is task creation, verify the real flow `open task form -> enter realistic values -> save -> task appears/persists`. The API test should reproduce the actual client payload where practical, including optional fields such as dates and assignees.
 
 Testing depth must be calibrated by lifecycle stage and domain risk. An experiment may need only focused verification; a production/high-criticality financial flow requires significantly stronger coverage.
 
-A feature is not complete merely because it compiles or builds.
-
 When completion depends on test discovery, report meaningful counts. A successful test command that discovered zero relevant tests is not evidence that the intended behavior was tested.
 
-Never imply backend/API tests verify frontend interactions they do not exercise. Distinguish automated, manual, and unverified behavior.
+Never imply backend/API tests verify frontend interactions they do not exercise. Distinguish automated, manual/browser/device, provider/runtime, and unverified behavior.
+
+When a user-visible bug escapes verification, add the cheapest durable regression check at the layer that would have caught it.
 
 ## 16. Observability
 
@@ -326,12 +333,16 @@ Verify README commands, paths, endpoints, config names, test claims, and status 
 
 Do not silently invent a new implementation phase after the documented roadmap ends. Re-plan explicitly when new scope is required.
 
-## 21. Completion standard
+## 21. Supervisor and completion standard
 
-Before declaring work, a phase, or a project complete:
+Supervisor mode from `workflow/supervisor-mode.md` is mandatory for substantial phase completion and release candidates. It must be visibly executed and its evidence reported; it is not satisfied merely because the agent says the phase is done.
+
+Before declaring work, a substantial phase, or a project complete:
 - run formatting/linting/type checks as applicable;
 - run relevant tests and record meaningful discovery/pass counts when useful;
-- distinguish automated, manual, runtime/provider-verified, and unverified evidence;
+- run functional acceptance for affected primary user journeys;
+- for a user-facing MVP/release, run a small smoke test covering the main happy paths from a realistic starting state;
+- distinguish automated, manual/browser/device, runtime/provider-verified, and unverified evidence;
 - inspect error paths and edge cases;
 - inspect authentication, authorization, and tenant/resource boundaries;
 - inspect schema/migration/invariant impact;
@@ -343,4 +354,4 @@ Before declaring work, a phase, or a project complete:
 - verify the canonical repository contains the reviewed final state;
 - list remaining risks, assumptions, limitations, and intentionally deferred work.
 
-Never claim tests/checks passed unless they were actually executed. Never present a successful command with zero relevant work discovered as proof of coverage. Never claim complete repository synchronization without checking the canonical source when it is accessible.
+Never claim tests/checks passed unless they were actually executed. Never present a successful command with zero relevant work discovered as proof of coverage. Never claim complete repository synchronization without checking the canonical source when it is accessible. Never call a critical user-facing feature fully functional when its real user journey remains unverified.
