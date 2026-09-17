@@ -68,6 +68,7 @@ Choose one or more as appropriate:
 
 ## 7. Delivery and agent workflow
 
+- [`workflow/project-readme-standard.md`](./workflow/project-readme-standard.md) — professional project README structure, verified setup instructions, repository map, API/docs linking, and anti-slop rules.
 - [`workflow/context-budget.md`](./workflow/context-budget.md) — low-token cold starts, context hygiene, multi-agent handoff, and minimum-sufficient reading.
 - [`workflow/git-commits-prs.md`](./workflow/git-commits-prs.md)
 - [`workflow/supervisor-mode.md`](./workflow/supervisor-mode.md)
