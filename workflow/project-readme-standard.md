@@ -1,35 +1,31 @@
 # Professional Project README Standard
 
-A project README is the primary entry point for developers, reviewers, operators, and contributors. It should help someone understand what the project is, how it is structured, how to run it, and where important implementation details live.
+A project README is the primary entry point for developers, reviewers, operators, and contributors. It should explain what the project is, how it is structured, how to run it, and where deeper details live.
 
-Do not generate a README as marketing copy, filler, or a generic template dump. Write it from the actual repository state.
+Do not generate marketing copy, filler, or a generic template dump. Write from the actual canonical repository state.
 
 ## Core rule
 
-A good README should answer, quickly:
+A good README should quickly answer:
+1. What is this project and its current status?
+2. What does it actually do now?
+3. What stack and architecture does it use?
+4. Where do important frontend/backend/data modules live?
+5. How do I run it locally?
+6. What configuration is required?
+7. How do important API/data/auth flows work?
+8. What verification exists and what remains manual/unverified?
+9. How is it deployed?
+10. Where are deeper docs?
 
-1. What is this project?
-2. What problem does it solve?
-3. What is the current implementation status?
-4. What stack does it use?
-5. How is the repository organized?
-6. How do I run it locally?
-7. What configuration is required?
-8. How do the important flows work?
-9. Where are the API, database, architecture, and operational details?
-10. What should a developer know before changing it?
+Keep the root README scannable. Move deep detail into `docs/` and link to it.
 
-Keep the root README concise enough to scan. Move deep technical detail into `docs/` and link to it.
+## Recommended sections
 
-## Recommended structure
-
-Use only sections that are relevant to the project.
+Use only what applies:
 
 ```text
 # Project Name
-
-Short factual description.
-
 ## Overview
 ## Status
 ## Features
@@ -41,7 +37,7 @@ Short factual description.
 ## Environment Variables
 ## Database / Migrations
 ## API
-## Testing
+## Testing / Verification
 ## Deployment
 ## Important Engineering Decisions
 ## Documentation
@@ -49,379 +45,157 @@ Short factual description.
 ## License
 ```
 
-Do not create empty sections just because they appear in this list.
+Do not create empty sections merely because they appear here.
 
-## Project description
+## Accuracy rules
 
-Use 1-3 factual paragraphs.
+Every developer-facing claim must be supported by the repository or verified runtime/provider state.
 
-Explain:
-- what the product/service does;
-- who it is for when useful;
-- the main problem or workflow it supports.
+Do not:
+- call planned features implemented;
+- call HTTP refresh/polling "real-time" without actual push/subscription behavior;
+- call a provider candidate a permanent architecture requirement;
+- call a partial route group full CRUD;
+- claim security, scalability, performance, production readiness, or completeness without evidence;
+- state that tests cover frontend/browser behavior when only backend/API tests exist.
 
-Avoid phrases such as:
-- "powerful and innovative solution";
-- "cutting-edge platform";
-- "seamless user experience";
-- "robust and scalable architecture";
+When the canonical repository is accessible, inspect it after local/preview work is persisted. Local workspace state is not sufficient final evidence.
 
-unless the repository contains concrete evidence that makes the statement meaningful.
+## Overview and status
 
-## Status
+Use factual language and real lifecycle/status.
 
-State the real lifecycle/status when useful:
-
+Good:
 ```text
 Status: MVP / active development
 ```
 
-or
-
-```text
-Status: Production
-```
-
-Do not claim production readiness, scale, security, performance, or completeness without evidence.
-
-If major features are incomplete, say so briefly or link to `docs/PHASES.md`.
+Avoid generic claims such as "cutting-edge", "robust and scalable", or "seamless" unless they convey a verified property.
 
 ## Features
 
-List actual product capabilities, not implementation trivia.
+List actual product capabilities, not implementation trivia or inflated feature counts.
 
-Prefer:
+## Tech stack and architecture
 
-```text
-- Email/password authentication and account verification
-- Product catalog with search, filtering, and pagination
-- Persistent cart and checkout
-- Paystack payment initialization, verification, and webhook handling
-- Role-based administration
-```
+List important technologies by responsibility, not every package.
 
-Avoid inflated feature counts or listing every small UI component.
+Explain the smallest useful architecture picture and major boundaries. Link to project design/ADRs for deeper reasoning.
 
-## Tech stack
-
-List important technologies by responsibility.
-
-Example:
-
-```text
-Frontend: Next.js, React, TypeScript
-Backend: Node.js, Express, TypeScript
-Database: PostgreSQL, Drizzle ORM
-Payments: Paystack
-Email: SMTP / ZeptoMail
-Testing: Vitest
-```
-
-Do not dump every package from `package.json` into the README.
-
-## Architecture
-
-Give the reader the smallest useful architecture picture.
-
-Example:
-
-```text
-Frontend
-   |
-   v
-Backend API
-   |
-   +--> PostgreSQL
-   +--> Payment provider
-   +--> Email provider
-```
-
-For larger systems, use a Mermaid diagram when it improves comprehension.
-
-Explain important boundaries, not every class or function.
-
-If detailed architecture documentation exists, link to it instead of duplicating it.
+Distinguish capability from provider where useful. Example: "PostgreSQL, currently hosted on Cloud SQL" is different from making Cloud SQL part of the conceptual data model.
 
 ## Repository structure
 
-Show the meaningful top-level and important second-level directories.
+Inspect the current tree. Show meaningful top-level/second-level paths and responsibilities only.
 
-For a split full-stack project:
-
-```text
-project/
-├── frontend/          # Client application
-├── backend/           # API and business logic
-├── docs/              # Architecture and operational documentation
-├── AGENTS.md          # Project-specific agent instructions
-└── README.md
-```
-
-For a backend:
-
-```text
-backend/
-├── src/
-│   ├── modules/       # Domain modules
-│   ├── middleware/    # Request middleware
-│   ├── infrastructure/# Database, email, storage integrations
-│   ├── config/        # Runtime configuration
-│   ├── app.ts         # Application setup
-│   └── server.ts      # Process entry point
-├── tests/
-├── docs/
-└── migrations/
-```
-
-Do not print enormous directory trees. Show enough structure for a new developer to know where things belong.
-
-Descriptions beside folders should explain responsibility, not restate the folder name.
+Never reuse an intended folder layout after the implementation has changed. Verify paths such as root `server.ts`, `src/routes/`, `frontend/`, `backend/`, migrations, tests, and docs actually exist.
 
 ## Local development
 
-Provide commands that actually exist in the repository.
+Document only commands that exist in package/build/task files and have the stated purpose.
 
-Include, as relevant:
-- required runtime/tool versions;
+Include as relevant:
+- runtime/tool versions;
 - dependency installation;
 - environment setup;
-- database startup;
-- migrations/seeding;
+- database startup/migrations/seeding;
 - dev command;
+- build/start commands;
 - default ports.
 
-Example:
+Do not invent commands.
 
-```bash
-npm install
-cp .env.example .env
-npm run db:start
-npm run db:setup
-npm run dev
-```
+## Environment/configuration
 
-Never invent scripts or commands. Inspect package/build files first.
+Inspect actual configuration reads and `.env.example` together.
 
-## Environment variables
+Required variable names in the README and environment example must match the code. Remove stale scaffold variables that the product no longer uses.
 
-Do not publish secrets or real credentials.
-
-Prefer documenting required variable names and purpose:
-
-```text
-DATABASE_URL       PostgreSQL connection string
-JWT_SECRET         Token signing secret
-PAYSTACK_SECRET_KEY Payment provider server key
-```
-
-If `.env.example` exists, link to it rather than duplicating every value.
-
-Mark optional variables clearly.
+Never include real secrets. Clearly distinguish client-public configuration from server secrets. If `.env.example` is authoritative, link to it rather than duplicating every placeholder.
 
 ## Database and migrations
 
-For projects with a database, explain:
-- database technology;
-- migration command/location;
-- seed command/location when applicable;
-- whether migrations must run before application deployment;
-- any development-specific database setup that would surprise a new developer.
+State the database engine, migration mechanism/location, required setup commands, and important deployment order when useful. Do not dump the whole schema.
 
-Do not copy the entire schema into the README.
+## API
 
-## API and endpoints
+For small APIs, list implemented route groups or endpoints accurately. For larger APIs, link to OpenAPI/Postman/API docs.
 
-Include an API section when the repository exposes an API and the information is useful to developers.
+Verify method, path, auth expectations, and capability against route registration/source. Do not describe endpoints that do not exist or broaden partial capabilities into "CRUD".
 
-For small APIs, a concise route-group table is enough:
+## Authentication
 
-| Area | Base path | Purpose |
-|---|---|---|
-| Auth | `/auth` | Login, registration, verification, password recovery |
-| Products | `/products` | Product browsing and detail |
-| Orders | `/orders` | Checkout and customer order operations |
-| Admin | `/admin` | Protected management operations |
+When relevant, state the identity/session model and where server authorization occurs. Do not imply that a managed identity provider owns application authorization unless that is actually true.
 
-For large APIs, do not paste every endpoint into the README. Link to OpenAPI/Swagger/Postman or `docs/api.md`.
+## Testing and verification
 
-When specific endpoints matter for onboarding, document method, path, auth requirement, and purpose accurately.
+Document actual commands and stable test categories.
 
-Never invent undocumented endpoints.
+Distinguish:
+- automated unit/integration/API/E2E coverage;
+- manual frontend/runtime verification;
+- provider/environment verification;
+- known unautomated areas.
 
-## Important engineering decisions
+Do not permanently write "all tests pass" without a live badge/CI source. If citing a current count as part of a release/status snapshot, make clear what those tests cover.
 
-Record only decisions a new developer is likely to question immediately.
-
-Examples:
-- why PostgreSQL was chosen;
-- why the application is a modular monolith;
-- why frontend/backend are separate applications;
-- why sessions were chosen over JWTs;
-- why a queue/cache was intentionally not introduced;
-- why a particular provider owns file storage or payment processing.
-
-Keep explanations brief and link to an ADR or design document for deeper reasoning.
-
-Do not turn the README into an architecture diary.
-
-## Testing
-
-Document actual test/check commands:
-
-```bash
-npm test
-npm run lint
-npm run typecheck
-npm run build
-```
-
-State important test categories when helpful.
-
-Never write "all tests pass" as permanent README prose. Test results become stale.
+A successful backend test suite does not prove browser state transitions, accessibility, rendering, or frontend navigation unless those behaviors are exercised.
 
 ## Deployment
 
-Document only stable, useful deployment information:
-- target platform/runtime;
-- build/start commands;
-- required migration step;
-- relevant health endpoint;
-- link to detailed production/runbook docs.
+Document stable target/runtime assumptions, build/start commands, migrations, configuration expectations, and health endpoints. Do not invent infrastructure detail or expose secrets.
 
-Do not expose credentials, private infrastructure details, or environment-specific secrets.
+## Important engineering decisions
 
-## Documentation links
+Record only decisions a new developer is likely to question, such as:
+- modular monolith vs services;
+- database/access-layer choice;
+- auth/session approach;
+- intentionally omitted queue/cache;
+- provider choice when it materially affects development.
 
-For serious projects, the README should act as a map:
+Keep explanations short and link to ADRs/project design.
+
+## Documentation map
+
+Link to deeper authoritative documents rather than copying them into README:
 
 ```text
-- Architecture: docs/architecture.md
-- Authentication: docs/authentication.md
-- Payments: docs/payments.md
-- Database: docs/database.md
-- Development: docs/development.md
+- Architecture: docs/project-design.md
+- Context/invariants: docs/CONTEXT.md
+- Roadmap: docs/PHASES.md
+- Active task: docs/NOW.md
 ```
-
-This is better than copying those documents into the README.
-
-## Screenshots and media
-
-Use screenshots for visual products when they help someone understand the product.
-
-Do not add decorative screenshots to backend/API repositories merely to make the README look busy.
-
-Keep screenshots current.
-
-## Badges
-
-Use badges only when they communicate useful live information such as CI status, package version, coverage, or license.
-
-Avoid walls of decorative badges.
-
-## Writing style
-
-README prose should be:
-- factual;
-- concise;
-- specific;
-- professional;
-- written for someone unfamiliar with the repository.
-
-Avoid:
-- excessive emojis;
-- fake enthusiasm;
-- generic AI introductions;
-- repeated claims about scalability, robustness, performance, or security;
-- unnecessary "Why choose this project?" marketing sections;
-- filler such as "Welcome to..." when it adds no information;
-- duplicating documentation that already lives elsewhere.
 
 ## Adapt by project type
 
-### Portfolio/static site
+Portfolio/static sites can be lightweight. Frontend apps should explain build/deploy and non-obvious state/data conventions. Backend/API projects should emphasize configuration, database/migrations, auth, API docs, tests, and health/deploy. Full-stack projects should make frontend/backend boundaries and commands obvious. Financial/ecommerce systems should link to authoritative payment/order/webhook/reconciliation/invariant docs.
 
-Usually needs:
-- short overview;
-- stack;
-- local setup;
-- project structure if useful;
-- deployment;
-- screenshots/demo link.
+Do not force irrelevant sections onto simple projects.
 
-It usually does not need database, API, migrations, architecture-decision, or operations sections.
+## Agent procedure before writing or finalizing a README
 
-### Frontend application
-
-Usually needs:
-- overview;
-- stack;
-- feature areas;
-- routing/state/data-fetching conventions when non-obvious;
-- project structure;
-- environment variables;
-- local development;
-- build/deploy.
-
-### Backend/API
-
-Usually needs:
-- purpose;
-- architecture;
-- stack;
-- module structure;
-- local setup;
-- database/migrations;
-- configuration;
-- API documentation link/route groups;
-- auth model;
-- testing;
-- deployment/health.
-
-### Full-stack product
-
-Usually needs:
-- overview;
-- architecture;
-- clear `frontend/` and `backend/` structure when split;
-- commands for each application;
-- database and integrations;
-- important API/docs links;
-- deployment model.
-
-### Financial/ecommerce systems
-
-Add concise links to authoritative documentation for:
-- payment flow;
-- order/payment states;
-- webhook behavior;
-- reconciliation;
-- inventory/financial invariants when relevant.
-
-Do not place sensitive financial or provider credentials in the README.
-
-## Agent procedure before writing or rewriting a README
-
-1. Inspect the repository root and existing README.
-2. Detect project type, stack, package/build commands, runtime, and folder structure.
-3. Inspect `.env.example`, migration config, test config, deployment config, API documentation, and important `docs/` files when present.
-4. Distinguish verified repository facts from assumptions.
-5. Preserve useful existing project-specific information.
-6. Remove stale, generic, duplicated, or unsupported claims.
-7. Write only sections relevant to this repository.
-8. Verify every command/path/endpoint referenced actually exists.
-9. Link to deeper docs instead of copying them.
-10. Review the README as if onboarding a developer who did not build the project.
+1. Inspect the canonical repository root and current README.
+2. Detect project type, stack, package/build commands, runtime, folder structure, and deployment configuration.
+3. Inspect actual config reads plus `.env.example`.
+4. Inspect migration/test config and route registration/API docs when present.
+5. Inspect project design, PHASES/CONTEXT/NOW, ADRs, and important operational docs only as needed.
+6. Distinguish repository facts, runtime/provider facts, assumptions, and stale intent.
+7. Preserve useful project-specific information; remove obsolete scaffold/generated claims.
+8. Verify every command, path, endpoint, config name, test-scope claim, feature status, and architecture statement.
+9. Link to deeper docs instead of duplicating them.
+10. After local/preview edits are persisted, re-check the canonical repository before declaring the README reconciled.
 
 ## Completion check
 
 Before finishing, ask:
-
-- Can a new developer understand the project in a few minutes?
-- Can they find the frontend, backend, tests, database, and docs quickly?
+- Can a new developer understand the project and current state quickly?
+- Can they find code, tests, database, config, and docs?
 - Can they run it without guessing commands?
-- Are configuration requirements clear without exposing secrets?
-- Are API links/routes accurate?
-- Are major architectural decisions explained only where useful?
-- Is detailed documentation linked instead of duplicated?
-- Is every claim supported by the repository?
-- Does this read like engineering documentation rather than AI-generated promotional copy?
+- Do environment examples match actual configuration reads?
+- Are repository paths and API routes accurate?
+- Are verification claims scoped to what was actually exercised?
+- Are architecture/provider statements precise rather than overstated?
+- Are stale phase/status/features removed?
+- Does the canonical repository contain this final README?
+- Does it read like engineering documentation rather than AI-generated promotional copy?
